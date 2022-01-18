@@ -71,6 +71,12 @@ module.exports = {
             where: { guildId: interaction.guildId },
         })
 
+        if (!guildPrefs || !guildPrefs.giveawayChannelId)
+            return await interaction.reply({
+                content: "Please use the `/config` command first.",
+                ephemeral: true,
+            })
+
         const channel = await interaction.client.channels.fetch(
             guildPrefs.giveawayChannelId
         )
@@ -85,11 +91,6 @@ module.exports = {
                     "I must have the permissions `View Channel`, `Send Messages`, `Embed Links`, and `Mention @everyone, @here, and All Roles` in the text channel. Please fix this, and then try again.",
             })
         }
-        if (!guildPrefs || !guildPrefs.giveawayChannelId)
-            return await interaction.reply({
-                content: "Please use the `/config` command first.",
-                ephemeral: true,
-            })
 
         const [
             winnersOption,
@@ -154,6 +155,7 @@ module.exports = {
         giveaway = await db.Giveaways.create({
             uuid: uuid,
             guildId: interaction.guildId,
+            userId: interaction.user.id,
             item: itemOption.value,
             winners: winnersOption.value,
             endDate: ends,
@@ -161,18 +163,18 @@ module.exports = {
                 [requirement1Option, requirement2Option, requirement3Option]
                     .filter((requirement) => requirement)
                     .join() || null,
-            messageId: await channel.send({
-                content: guildPrefs.extraGiveawayMessage,
-                embeds: [embed],
-                components: [row],
-            }).id,
         })
 
-        await interaction.reply({
-            content: `Created! Check ${channelMention(
-                channel.id
-            )} to see your new giveaway!`,
-            ephemeral: true,
-        })
+        await channel.send({
+            content: guildPrefs.extraGiveawayMessage,
+            embeds: [embed],
+            components: [row],
+        }).id,
+            await interaction.reply({
+                content: `Created! Check ${channelMention(
+                    channel.id
+                )} to see your new giveaway!`,
+                ephemeral: true,
+            })
     },
 }

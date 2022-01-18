@@ -13,6 +13,7 @@ Giveaway.init(
             unique: true,
             primaryKey: true,
         },
+        userId: DataTypes.STRING,
         guildId: DataTypes.STRING,
         item: DataTypes.STRING,
         winners: DataTypes.INTEGER,

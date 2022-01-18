@@ -37,13 +37,14 @@ module.exports = {
             },
         })
 
-        if (roleOption.role.id == interaction.guild.roles.everyone.id)
-            guildPrefs.update({ giveawayRoleId: null })
-        else guildPrefs.update({ giveawayRoleId: roleOption.role.id })
-
-        console.log(
-            `${roleOption.role.name} (${roleOption.role.id}) is the new giveaway making role in ${interaction.guild}`
-        )
+        if (roleOption) {
+            if (roleOption.role.id == interaction.guild.roles.everyone.id)
+                guildPrefs.update({ giveawayRoleId: null })
+            else guildPrefs.update({ giveawayRoleId: roleOption.role.id })
+            console.log(
+                `${roleOption.role.name} (${roleOption.role.id}) is the new giveaway making role in ${interaction.guild}`
+            )
+        }
 
         if (
             !channelOption.channel
