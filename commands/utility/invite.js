@@ -9,7 +9,12 @@ module.exports = {
         const button = new MessageButton()
             .setURL(
                 interaction.client.generateInvite({
-                    permissions: [Permissions.FLAGS.ADMINISTRATOR],
+                    permissions: [
+                        Permissions.FLAGS.VIEW_CHANNEL,
+                        Permissions.FLAGS.EMBED_LINKS,
+                        Permissions.FLAGS.SEND_MESSAGES,
+                        Permissions.FLAGS.MENTION_EVERYONE,
+                    ],
                     scopes: ["applications.commands", "bot"],
                 })
             )

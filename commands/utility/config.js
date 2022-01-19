@@ -43,14 +43,19 @@ module.exports = {
             else guildPrefs.update({ giveawayRoleId: roleOption?.role?.id })
 
             console.log(
-                `${roleOption?.role?.name} (${roleOption?.role?.id}) is the new giveaway making role in ${interaction.guild}`
+                `${roleOption?.role?.name} (${roleOption?.role?.id}) is the new giveaway making role in ${interaction.guild}.`
             )
         }
 
         if (
             !channelOption.channel
                 .permissionsFor(interaction.guild.me)
-                .has(["2048", "16384", "131072", "1024"])
+                .has([
+                    Permissions.FLAGS.VIEW_CHANNEL,
+                    Permissions.FLAGS.EMBED_LINKS,
+                    Permissions.FLAGS.SEND_MESSAGES,
+                    Permissions.FLAGS.MENTION_EVERYONE,
+                ])
         ) {
             return await interaction.reply({
                 content:
