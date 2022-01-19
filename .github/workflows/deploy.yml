@@ -1,0 +1,26 @@
+name: Deploy to VM
+
+on:
+    push:
+        branches: [master]
+    pull_request:
+        branches: [master]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Install SSH key
+                uses: shimataro/ssh-key-action@6f350ca8484d8d55c2e361e74d17e638dabe713a
+                with:
+                    key: ${{ secrets.SSH_KEY }}
+                    known_hosts: ${{ secrets.KNOWN_HOSTS }}
+
+            - name: Copy files to VM
+                run: rsync -chav --delete ./ ${{ secrets.USER_AND_IP }}:/var/www/quadraticbot/tmp
+
+            - name: Execute remote command
+                run: ssh ${{ secrets.USER_AND_IP }} sudo /var/www/deploy-bot.sh quadraticbot
