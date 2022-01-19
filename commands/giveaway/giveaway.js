@@ -7,7 +7,12 @@ const {
 } = require("@discordjs/builders")
 const end = require("../../helpers/end.js")
 const { v4: uuidv4 } = require("uuid")
-const { MessageActionRow, MessageEmbed, MessageButton } = require("discord.js")
+const {
+    MessageActionRow,
+    MessageEmbed,
+    MessageButton,
+    Permissions,
+} = require("discord.js")
 const db = require("../../helpers/database.js")
 
 module.exports = {
@@ -85,7 +90,12 @@ module.exports = {
         if (
             !channel
                 .permissionsFor(interaction.guild.me)
-                .has(["2048", "16384", "131072", "1024"])
+                .has([
+                    Permissions.FLAGS.VIEW_CHANNEL,
+                    Permissions.FLAGS.EMBED_LINKS,
+                    Permissions.FLAGS.SEND_MESSAGES,
+                    Permissions.FLAGS.MENTION_EVERYONE,
+                ])
         ) {
             return await interaction.editReply({
                 content:

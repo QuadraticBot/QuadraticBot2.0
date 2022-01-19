@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
 const { ChannelType } = require("discord-api-types/v9")
+const { Permissions } = require("discord.js")
 const db = require("../../helpers/database.js")
 module.exports = {
     data: new SlashCommandBuilder()
