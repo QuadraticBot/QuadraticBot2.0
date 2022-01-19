@@ -1,137 +1,160 @@
-const Discord = require("discord.js");
-module.exports = async (db, time, giveaway, message, endTime) => {
-	if(!message.channel.guild) await message.fetch();
-	if(!message.channel.guild) return;
-	console.log(`Ender executed for giveaway ${giveaway.uuid}. Ending in ${time}.`);
-	let timeout = 0;
-	if (time > 0) {
-		timeout = time;
-	}
-	setTimeout( async () => {
-		endTime = Math.floor( endTime / 1000 );
-		let entrants = await db.Entrants.findAll( {
-			where: {
-				giveawayUuid: giveaway.uuid,
-			},
-		} );
-		console.log(`Giveaway ${giveaway.uuid} ended with ${entrants.length} entrants.`);
-		let winners = [];
-		let winnerNames = [];
-		let extraText = "";
-		let requirements = message.embeds[0].fields[2]
-		if(requirements)
-		{
-			requirements = requirements.value
-		}
-		let hosters = await message.channel.guild.members.search({query: message.embeds[0].author.name.substring(0, message.embeds[0].author.name.length - 5)})
-		hosters.filter(member => member.user.discriminator == message.embeds[0].author.name.substring(message.embeds[0].author.name.length - 4))
-		let hoster = message.embeds[0].author.name
-		if(hosters != null)	hoster = hosters.first()
-		
-		let winnerCount = giveaway.winners;
-		if ( entrants.length == 0 ) {
-			const embed = new Discord.MessageEmbed()
-				.setColor( "#0099ff" )
-				.setTitle( "Giveaway Complete! Nobody joined..." )
-				.setAuthor( message.embeds[0].author.name, message.embeds[0].iconURl )
-				.setThumbnail( "https://gifimage.net/wp-content/uploads/2017/11/gift-gif-14.gif" )
-				.setDescription( "Giveaway for **" + giveaway.item + "**!" )
-				.addFields(
-					{ name: "Ended", value: "**<t:" + endTime + ":R>.**", inline: true }
-				)
-				.setTimestamp()
-				.setFooter(
-					message.client.user.tag,
-					message.client.user.displayAvatarURL({dynamic: true})
-				);
-			if(requirements) embed.addFields({name: "Requirements", value: requirements, inline: true})
-			await message.edit( {
-				embeds: [embed],
-				components: [],
-			} );
-			const embed2 = new Discord.MessageEmbed()
-				.setColor( "#0099ff" )
-				.setTitle( "Giveaway Ended!\nNobody joined..." )
-				.setDescription( "Giveaway for **" + giveaway.item + "**!" )
-				.addFields( { name: "Won by", value: "Nobody" } )
-				.setTimestamp()
-				.setFooter(
-					message.client.user.tag,
-					message.client.user.displayAvatarURL({dynamic: true})
-				);
-			await giveaway.update( { isFinished: true } );
-			return await message.reply( {
-				content: `Hosted by:  ${hoster}.`,
-				embeds: [embed2],
-			} );
-		} else if ( entrants.length < winnerCount ) {
-			let otherWinners = winnerCount - entrants.length;
-			if ( otherWinners == 1 ) {
-				extraText = ` The other winner was not chosen, as there were not enough entrants.`;
-			} else {
-				extraText = ` The other ${otherWinners} winners were not chosen, as there were not enough entrants.`;
-				winnerCount = entrants.length;
-			}
-		}
+const { userMention, time: timestamp, bold } = require("@discordjs/builders")
+const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js")
+const db = require("./database.js")
+module.exports = async (giveaway, client) => {
+    const time = giveaway.endDate - Date.now()
+    console.log(
+        `Ender executed for giveaway ${giveaway.uuid}. Ending in ${
+            time > 0 ? time : 0
+        }.`
+    )
+    setTimeout(
+        async () => {
+            const guildPrefs = await db.GuildPrefs.findOne({
+                where: {
+                    guildId: giveaway.guildId,
+                },
+            })
 
-		let entrantList = entrants;
-		for ( let index = 0; index < winnerCount; index++ ) {
-			let winnerIndex = Math.floor( Math.random() * entrants.length );
-			winners[index] = entrantList[winnerIndex];
-			entrantList.splice( winnerIndex, 1 );
-		}
+            const channel = await client.channels.fetch(
+                guildPrefs.giveawayChannelId
+            )
 
-		winners.forEach( winner => {
-			winnerNames.push( `<@!${winner.userId}>` );
-		} );
+            const message = await channel.messages.fetch(giveaway.messageId)
 
-		const embed = new Discord.MessageEmbed()
-			.setColor( "#0099ff" )
-			.setTitle( "Giveaway Complete!" )
-			.setDescription( "Giveaway for **" + giveaway.item + "**!" )
-			.setAuthor( message.embeds[0].author.name, message.embeds[0].iconURl )
-			.setThumbnail( "https://gifimage.net/wp-content/uploads/2017/11/gift-gif-14.gif" )
-			.addFields(
-				{
-					name: "Won by:",
-					value: `**${winnerNames.join( ", " )}!**`,
-					inline: true
-				},
-				{
-					name: "Ended:",
-					value: "**<t:" + endTime + ":R>.**",
-					inline: true
-				}
-			)
-			.setTimestamp()
-			.setFooter(
-				message.client.user.tag,
-				message.client.user.displayAvatarURL({dynamic: true})
-			);
-		if(requirements) embed.addFields({name: "Requirements", value: "**" + requirements + "**", inline: true})
-		await message.edit( {
-			content: null,
-			embeds: [embed],
-			components: [],
-		} );
-		const embed2 = new Discord.MessageEmbed()
-			.setColor( "#0099ff" )
-			.setTitle( "Giveaway Ended!" )
-			.setDescription( "Giveaway for **" + giveaway.item + "**!" )
-			.addFields( {
-				name: "Won by:",
-				value: `**${winnerNames.join( ", " )}**!`,
-			} )
-			.setTimestamp()
-			.setFooter(
-				message.client.user.tag,
-				message.client.user.displayAvatarURL({dynamic: true})
-			);
-		await message.reply( {
-			content: `Won by ${winnerNames.join( ", " )}! Hosted by: ${hoster}.\n` + extraText,
-			embeds: [embed2],
-		} );
-		await giveaway.update( { isFinished: true } );
-	}, timeout );
+            const entrants = await db.Entrants.findAll({
+                where: {
+                    giveawayUuid: giveaway.uuid,
+                },
+            })
+
+            if (entrants.length == 0) {
+                const embed = new MessageEmbed(message.embeds[0])
+                    .setTitle("Giveaway Complete! Nobody joined...")
+                    .setFields(
+                        {
+                            name: "Ended",
+                            value: timestamp(
+                                Math.floor((time + Date.now()) / 1000),
+                                "R"
+                            ),
+                            inline: true,
+                        },
+                        {
+                            name: "Requirements",
+                            value: message.embeds[0].fields[2].value,
+                            inline: true,
+                        }
+                    )
+
+                const row = new MessageActionRow().addComponents(
+                    new MessageButton(
+                        message.components[0].components[0]
+                    ).setDisabled(true)
+                )
+
+                await message.edit({
+                    embeds: [embed],
+                    components: [row],
+                })
+
+                const embed2 = new MessageEmbed()
+                    .setColor("#0099ff")
+                    .setTitle("Giveaway Ended!\nNobody joined...")
+                    .setDescription(`Giveaway for ${bold(giveaway.item)}!`)
+                    .addField("Won by", "Nobody")
+                    .setTimestamp()
+                    .setFooter({
+                        text: message.client.user.tag,
+                        iconURL: message.client.user.displayAvatarURL({
+                            dynamic: true,
+                        }),
+                    })
+                await giveaway.update({ isFinished: true })
+                return await message.reply({
+                    content: `Hosted by: ${userMention(giveaway.userId)}.`,
+                    embeds: [embed2],
+                })
+            }
+
+            const winnerNames = []
+
+            const entrantList = [...entrants]
+
+            for (
+                let i = 0;
+                i <
+                (giveaway.winners > entrants.length
+                    ? entrants.length
+                    : giveaway.winners);
+                i++
+            ) {
+                const winnerIndex = Math.floor(Math.random() * entrants.length)
+                winnerNames[i] = userMention(entrantList[winnerIndex].userId)
+                entrantList.splice(winnerIndex, 1)
+            }
+
+            const embed = new MessageEmbed()
+                .setTitle("Giveaway Complete!")
+                .setFields(
+                    {
+                        name: "Won by:",
+                        value: bold(winnerNames.join(", ")),
+                        inline: true,
+                    },
+                    {
+                        name: "Ended",
+                        value: timestamp(
+                            Math.floor((time + Date.now()) / 1000),
+                            "R"
+                        ),
+                    },
+                    {
+                        name: "Requirements",
+                        value: message.embeds[0].fields[2].value,
+                    }
+                )
+            await message.edit({
+                content: null,
+                embeds: [embed],
+                components: [],
+            })
+            const embed2 = new MessageEmbed()
+                .setColor("#0099ff")
+                .setTitle("Giveaway Ended!")
+                .setDescription(`Giveaway for ${bold(giveaway.item)}!`)
+                .addFields({
+                    name: "Won by:",
+                    value: winnerNames.join(", "),
+                })
+                .setTimestamp()
+                .setFooter({
+                    text: message.client.user.tag,
+                    iconURL: message.client.user.displayAvatarURL({
+                        dynamic: true,
+                    }),
+                })
+            await message.reply({
+                content: `Won by ${winnerNames.join(
+                    ", "
+                )}! Hosted by: ${userMention(giveaway.userId)}.\n ${
+                    giveaway.winners > entrants.length
+                        ? `The last ${
+                              giveaway.winners - entrants.length == 1
+                                  ? "winner slot was"
+                                  : `${
+                                        giveaway.winners - entrants.length
+                                    } winner slots were`
+                          } not chosen as there were not enough entrants.`
+                        : ""
+                }`,
+                embeds: [embed2],
+            })
+            await giveaway.update({ isFinished: true })
+            console.log(
+                `Giveaway ${giveaway.uuid} ended with ${entrants.length} entrants.`
+            )
+        },
+        time > 0 ? time : 0
+    )
 }
-

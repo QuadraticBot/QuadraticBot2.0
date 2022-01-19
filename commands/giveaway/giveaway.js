@@ -3,8 +3,9 @@ const {
     bold,
     time: timestamp,
     channelMention,
-    userMention,
+    roleMention,
 } = require("@discordjs/builders")
+const end = require("../../helpers/end.js")
 const { v4: uuidv4 } = require("uuid")
 const { MessageActionRow, MessageEmbed, MessageButton } = require("discord.js")
 const db = require("../../helpers/database.js")
@@ -119,7 +120,7 @@ module.exports = {
                 .setCustomId(uuid)
                 .setLabel(" Enter Giveaway")
                 .setStyle("SUCCESS")
-                .setEmoji("879055779754299443")
+                .setEmoji("891803406941974559")
         )
 
         const embed = new MessageEmbed()
@@ -137,11 +138,18 @@ module.exports = {
             .addField("Ends", timestamp(Math.floor(ends / 1000), "R"), true)
             .addField(
                 "Requirements",
-                `${
-                    [requirement1Option, requirement2Option, requirement3Option]
-                        .filter((requirement) => requirement)
-                        .join(", ") || "None"
-                }`,
+                [
+                    roleMention(requirement1Option?.role?.id),
+                    roleMention(requirement2Option?.role?.id),
+                    roleMention(requirement3Option?.role?.id),
+                ]
+                    .filter(
+                        (requirement) =>
+                            requirement != "<@&undefined>" &&
+                            requirement !=
+                                roleMention(interaction.guild.roles.everyone.id)
+                    )
+                    .join(", ") || "None",
                 true
             )
             .setTimestamp()
@@ -152,7 +160,7 @@ module.exports = {
                 }),
             })
 
-        giveaway = await db.Giveaways.create({
+        const giveaway = await db.Giveaways.create({
             uuid: uuid,
             guildId: interaction.guildId,
             userId: interaction.user.id,
@@ -160,21 +168,30 @@ module.exports = {
             winners: winnersOption.value,
             endDate: ends,
             requirements:
-                [requirement1Option, requirement2Option, requirement3Option]
+                [
+                    requirement1Option?.role?.id,
+                    requirement2Option?.role?.id,
+                    requirement3Option?.role?.id,
+                ]
                     .filter((requirement) => requirement)
                     .join() || null,
         })
 
-        await channel.send({
+        const message = await channel.send({
             content: guildPrefs.extraGiveawayMessage,
             embeds: [embed],
             components: [row],
-        }).id,
-            await interaction.reply({
-                content: `Created! Check ${channelMention(
-                    channel.id
-                )} to see your new giveaway!`,
-                ephemeral: true,
-            })
+        })
+
+        giveaway.update({ messageId: message.id })
+
+        await interaction.reply({
+            content: `Created! Check ${channelMention(
+                channel.id
+            )} to see your new giveaway!`,
+            ephemeral: true,
+        })
+
+        await end(giveaway, interaction.client)
     },
 }

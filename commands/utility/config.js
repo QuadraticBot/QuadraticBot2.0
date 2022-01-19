@@ -38,11 +38,12 @@ module.exports = {
         })
 
         if (roleOption) {
-            if (roleOption.role.id == interaction.guild.roles.everyone.id)
+            if (roleOption?.role?.id == interaction.guild.roles.everyone.id)
                 guildPrefs.update({ giveawayRoleId: null })
-            else guildPrefs.update({ giveawayRoleId: roleOption.role.id })
+            else guildPrefs.update({ giveawayRoleId: roleOption?.role?.id })
+
             console.log(
-                `${roleOption.role.name} (${roleOption.role.id}) is the new giveaway making role in ${interaction.guild}`
+                `${roleOption?.role?.name} (${roleOption?.role?.id}) is the new giveaway making role in ${interaction.guild}`
             )
         }
 

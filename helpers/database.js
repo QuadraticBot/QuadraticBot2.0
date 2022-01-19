@@ -22,6 +22,7 @@ Giveaway.init(
             type: DataTypes.STRING,
             defaultValue: null,
         },
+        messageId: DataTypes.STRING,
         isFinished: {
             type: DataTypes.BOOLEAN,
             defaultValue: false,

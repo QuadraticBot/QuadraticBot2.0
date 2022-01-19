@@ -26,9 +26,7 @@ rest.put(
 )
     .then(() =>
         console.log(
-            `${
-                process.env.DEVELOPMENT ? "Deployed" : "Deploying"
-            } application commands to ${
+            `Deployed all application commands to ${
                 process.env.DEVELOPMENT
                     ? `test server (${devGuildId})`
                     : "all servers"
