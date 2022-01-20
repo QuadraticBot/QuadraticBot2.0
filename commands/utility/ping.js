@@ -3,7 +3,7 @@ const { SlashCommandBuilder, bold } = require("@discordjs/builders")
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("ping")
-        .setDescription("Replies with Pong!"),
+        .setDescription("Replies with latency and uptime."),
     execute: async (interaction) => {
         let message = `Pong!\nLatency: ${bold(interaction.client.ws.ping)}.`
         let totalSeconds = interaction.client.uptime / 1000
