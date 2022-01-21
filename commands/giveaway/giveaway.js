@@ -83,6 +83,14 @@ module.exports = {
                 ephemeral: true,
             })
 
+        if (guildPrefs.giveawayRoleId)
+            return await interaction.reply({
+                content: `You need the ${roleMention(
+                    guildPrefs.giveawayRoleId
+                )} role to use this command.`,
+                ephemeral: true,
+            })
+
         const channel = await interaction.client.channels.fetch(
             guildPrefs.giveawayChannelId
         )
