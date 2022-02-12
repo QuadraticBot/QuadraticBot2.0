@@ -10,7 +10,7 @@ It's a rewrite of my original closed-source Discord bot, Quadratic Giveaways.
 
 ## Command List
 
-### Config: 
+### Config: `/config`
 Configure the bot to your needs. You must run `/config` before `/giveaway`.  
 
 **Arguments**:  
@@ -19,7 +19,7 @@ Extra Text (Required): Extra text to be displayed along with your giveaways.
 Giveaway Role (Required): The role requred to create giveaways. (Set to @everyone for no role)  
 
 
-### Giveaway: 
+### Giveaway: `/giveaway`
 Create a giveaway. You must run `/config` first.
 
 **Arguments**  
@@ -29,9 +29,9 @@ Minutes (Required): The number of minutes for the giveaway to go on for.
 Hours (Required): The number of hours for the giveaway to go on for.  
 Days (Required): The number of days for the giveaway to go on for.
 
-### Invite: Invite the bot to your server.
+### Invite: `/invite` Invite the bot to your server.
 
-### Ping: Check the ping and uptime of the bot.
+### Ping: `/ping` Check the ping and uptime of the bot.
 ---
 ## Technologies
 
