@@ -23,7 +23,7 @@ module.exports = {
             option
                 .setName("giveaway_role")
                 .setDescription(
-                    "Optional: Role needed to make giveaways. Set to @everyone for no role."
+                    "Role needed to make giveaways. Set to @everyone for no role."
                 )
                 .setRequired(true)
         ),

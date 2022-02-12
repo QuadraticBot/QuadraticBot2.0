@@ -4,7 +4,7 @@
     "description": "A simple giveaway bot written in Discord.JS",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "devDeploy": "DEVELOPMENT=true node deployCommands.js"
     },
     "keywords": [],
     "author": "",
