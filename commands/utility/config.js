@@ -28,7 +28,11 @@ module.exports = {
                 .setRequired(true)
         ),
     execute: async (interaction) => {
-        interaction.guild.me.permissions.has(Permissions.FLAGS.MANAGE_GUILD)
+        if(!interaction.guild.me.permissions.has(Permissions.FLAGS.MANAGE_GUILD)) return await interaction.reply({
+                content:
+                     "You must have the `Manage Server` permission to run this command.",
+                ephemeral: true,
+            })
 
         const [channelOption, extraOption, roleOption] =
             interaction.options.data
