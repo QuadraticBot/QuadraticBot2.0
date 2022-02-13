@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
+const { SlashCommandBuilder, inlineCode } = require("@discordjs/builders")
 const { ChannelType } = require("discord-api-types/v9")
 const { Permissions } = require("discord.js")
 const db = require("../../helpers/database.js")
@@ -28,9 +28,15 @@ module.exports = {
                 .setRequired(true)
         ),
     execute: async (interaction) => {
-        if(!interaction.guild.me.permissions.has(Permissions.FLAGS.MANAGE_GUILD)) return await interaction.reply({
-                content:
-                     "You must have the `Manage Server` permission to run this command.",
+        if (
+            !interaction.guild.me.permissions.has(
+                Permissions.FLAGS.MANAGE_GUILD
+            )
+        )
+            return await interaction.reply({
+                content: `You must have the ${inlineCode(
+                    "Manage Server"
+                )} permission to run this command.`,
                 ephemeral: true,
             })
 
