@@ -28,6 +28,8 @@ module.exports = {
                 .setRequired(true)
         ),
     execute: async (interaction) => {
+        interaction.guild.me.permissions.has(Permissions.FLAGS.MANAGE_GUILD)
+
         const [channelOption, extraOption, roleOption] =
             interaction.options.data
 

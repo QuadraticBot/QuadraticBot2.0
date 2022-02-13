@@ -83,7 +83,10 @@ module.exports = {
                 ephemeral: true,
             })
 
-        if (guildPrefs.giveawayRoleId)
+        if (
+            guildPrefs.giveawayRoleId &&
+            !interaction.member.roles.cache.has(guildPrefs.giveawayRoleId)
+        )
             return await interaction.reply({
                 content: `You need the ${roleMention(
                     guildPrefs.giveawayRoleId
