@@ -29,7 +29,7 @@ module.exports = {
         ),
     execute: async (interaction) => {
         if (
-            !interaction.guild.me.permissions.has(
+            !interaction.member.permissions.has(
                 Permissions.FLAGS.MANAGE_GUILD
             )
         )
