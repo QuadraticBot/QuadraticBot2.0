@@ -23,7 +23,7 @@ module.exports = async (interaction) => {
                 giveaway.requirements.split(",")
             )
         )
-            return await interaction.editReply({
+            return await interaction.reply({
                 content:
                     "You do not have the required roles to enter this giveaway.",
                 ephemeral: true,
@@ -36,7 +36,7 @@ module.exports = async (interaction) => {
             interaction.user.id != interaction.client.application?.owner.id &&
             giveaway.userId == interaction.user.id
         )
-            return await interaction.editReply({
+            return await interaction.reply({
                 content: "You cannot enter your own giveaway.",
                 ephemeral: true,
             })
