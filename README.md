@@ -13,10 +13,12 @@ It's a rewrite of my original closed-source Discord bot, Quadratic Giveaways.
 ### Config: `/config`
 Configure the bot to your needs. You must run `/config` before `/giveaway`.  
 
+![image](https://user-images.githubusercontent.com/71790868/154084383-a0a5af4e-2cc4-4a5b-aeae-f5d7e92f3c8f.png)
+
 **Arguments**:  
-Channel (Required): Channel for giveaways to be created in.  
-Extra Text (Required): Extra text to be displayed along with your giveaways.  
-Giveaway Role (Required): The role requred to create giveaways. (Set to @everyone for no role)  
+❶ Channel (Required): Channel for giveaways to be created in.  
+❷ Extra Text (Required): Extra text to be displayed along with your giveaways.  
+❸ Giveaway Role (Required): The role requred for server members to create giveaways.
 
 
 ### Giveaway: `/giveaway`
@@ -36,3 +38,11 @@ Days (Required): The number of days for the giveaway to go on for.
 ## Technologies
 
 This project was built using handcrafted Javascript and [Discord.js](https://discord.js.org/#/docs/discord.js/stable/general/welcome).
+
+## Self-hosting
+
+Though it is easier to just invite the bot, it is possible to self-host. Just create a `config.json` file at the root of the project with a format like this.   
+![image](https://user-images.githubusercontent.com/71790868/155026869-8974c09f-a9dd-4d64-9659-c920646fb608.png)
+To get a client id and token register a new application here: https://discord.com/developers/applications
+
+If you use the bot publicly please give credit in the bots description. Thank you.
