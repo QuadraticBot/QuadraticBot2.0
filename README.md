@@ -8,6 +8,8 @@ It's a rewrite of my original closed-source Discord bot, Quadratic Giveaways.
 
 ![Screenshot from 2022-01-31 15-34-34](https://user-images.githubusercontent.com/71790868/151868878-75f6584d-24d5-4af8-8b2b-8a1e00e646d6.png)
 
+[Changelog](https://github.com/Henry-Hiles/QuadraticBot2.0/blob/main/CHANGELOG.md)
+
 ## Command List
 
 ### Config: `/config`
