@@ -83,6 +83,7 @@ module.exports = {
             return await interaction.reply({
                 content:
                     "I must have the permissions `View Channel`, `Send Messages`, `Embed Links`, and `Mention @everyone, @here, and All Roles` in the text channel. Please fix this, and then try again.",
+                ephemeral: true,
             })
         }
 
