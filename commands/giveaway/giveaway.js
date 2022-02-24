@@ -7,11 +7,14 @@ const {
 } = require("@discordjs/builders")
 const end = require("../../helpers/end.js")
 const { v4: uuidv4 } = require("uuid")
+const addModal = require("../../helpers/addModal")
 const {
     MessageActionRow,
     MessageEmbed,
     MessageButton,
     Permissions,
+    TextInputComponent,
+    Modal,
 } = require("discord.js")
 const db = require("../../helpers/database.js")
 
@@ -19,37 +22,6 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName("giveaway")
         .setDescription("Starts a giveaway.")
-        .addIntegerOption((option) =>
-            option
-                .setName("winners")
-                .setDescription("How many winners should this giveaway have?")
-                .setRequired(true)
-                .setMinValue(1)
-        )
-        .addStringOption((option) =>
-            option
-                .setName("item")
-                .setDescription("What are you giving away?")
-                .setRequired(true)
-        )
-        .addIntegerOption((option) =>
-            option
-                .setName("minutes")
-                .setDescription("Minutes for the giveaway to go on for.")
-                .setRequired(true)
-        )
-        .addIntegerOption((option) =>
-            option
-                .setName("hours")
-                .setDescription("Hours for the giveaway to go on for.")
-                .setRequired(true)
-        )
-        .addIntegerOption((option) =>
-            option
-                .setName("days")
-                .setDescription("Days for the giveaway to go on for.")
-                .setRequired(true)
-        )
         .addRoleOption((option) =>
             option
                 .setName("role_requirement_1")
@@ -114,25 +86,84 @@ module.exports = {
             })
         }
 
-        const [
-            winnersOption,
-            itemOption,
-            minutesOption,
-            hoursOption,
-            daysOption,
-            requirement1Option,
-            requirement2Option,
-            requirement3Option,
-        ] = interaction.options.data
+        const rows = [
+            new MessageActionRow().addComponents(
+                new TextInputComponent()
+                    .setCustomId("winners")
+                    .setLabel("Winners")
+                    .setPlaceholder("How many winners should this have?")
+                    .setRequired(true)
+                    .setStyle("SHORT")
+            ),
+            new MessageActionRow().addComponents(
+                new TextInputComponent()
+                    .setCustomId("item")
+                    .setLabel("Item")
+                    .setPlaceholder("What are you giving away?")
+                    .setRequired(true)
+                    .setStyle("PARAGRAPH")
+            ),
+            new MessageActionRow().addComponents(
+                new TextInputComponent()
+                    .setCustomId("minutes")
+                    .setLabel("Minutes")
+                    .setPlaceholder("How many minutes should this last?")
+                    .setStyle("SHORT")
+            ),
+            new MessageActionRow().addComponents(
+                new TextInputComponent()
+                    .setCustomId("hours")
+                    .setLabel("Hours")
+                    .setPlaceholder("How many hours should this last?")
+                    .setStyle("SHORT")
+            ),
+            new MessageActionRow().addComponents(
+                new TextInputComponent()
+                    .setCustomId("days")
+                    .setLabel("Days")
+                    .setPlaceholder("How many days should this last?")
+                    .setStyle("SHORT")
+            ),
+        ]
+
+        const modal = new Modal()
+            .setCustomId(`modal-${interaction.id}`)
+            .addComponents(rows)
+            .setTitle("Giveaway")
+
+        const modalSubmitInteraction = await addModal(interaction, modal)
+
+        const winnersOption =
+                modalSubmitInteraction.fields.getTextInputValue("winners"),
+            itemOption =
+                modalSubmitInteraction.fields.getTextInputValue("item"),
+            minutesOption =
+                modalSubmitInteraction.fields.getTextInputValue("minutes") || 0,
+            hoursOption =
+                modalSubmitInteraction.fields.getTextInputValue("hours") || 0,
+            daysOption =
+                modalSubmitInteraction.fields.getTextInputValue("days") || 0
+
+        const [requirement1Option, requirement2Option, requirement3Option] =
+            interaction.options.data
 
         const time =
-            daysOption.value * 86400000 +
-            hoursOption.value * 3600000 +
-            minutesOption.value * 60000
+            daysOption * 86400000 +
+            hoursOption * 3600000 +
+            minutesOption * 60000
         const ends = Date.now() + time
 
-        if (time <= 0)
-            return await interaction.editReply("Time must be more than 0.")
+        if (!time || time <= 0)
+            return await modalSubmitInteraction.reply({
+                content: "Time must be a whole number greater than 0.",
+                ephemeral: true,
+            })
+
+        if (!Number(winnersOption))
+            return await modalSubmitInteraction.reply({
+                content: "Winnners must be a number.",
+                ephemeral: true,
+            })
 
         const uuid = uuidv4()
 
@@ -154,8 +185,8 @@ module.exports = {
             .setThumbnail(
                 "https://gifimage.net/wp-content/uploads/2017/11/gift-gif-14.gif"
             )
-            .setDescription(`Giveaway for ${bold(itemOption.value)}`)
-            .addField("Winners", bold(winnersOption.value), true)
+            .setDescription(`Giveaway for ${bold(itemOption)}`)
+            .addField("Winners", bold(winnersOption), true)
             .addField("Ends", timestamp(Math.floor(ends / 1000), "R"), true)
             .addField(
                 "Requirements",
@@ -185,8 +216,8 @@ module.exports = {
             uuid: uuid,
             guildId: interaction.guildId,
             userId: interaction.user.id,
-            item: itemOption.value,
-            winners: winnersOption.value,
+            item: itemOption,
+            winners: winnersOption,
             endDate: ends,
             requirements:
                 [
@@ -206,7 +237,7 @@ module.exports = {
 
         giveaway.update({ messageId: message.id })
 
-        await interaction.reply({
+        await modalSubmitInteraction.reply({
             content: `Created! Check ${channelMention(
                 channel.id
             )} to see your new giveaway!`,

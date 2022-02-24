@@ -13,7 +13,7 @@
         "@discordjs/builders": "^0.11.0",
         "@discordjs/rest": "^0.2.0-canary.0",
         "discord-api-types": "^0.26.1",
-        "discord.js": "^13.5.1",
+        "discord.js": "github:monbrey/discord.js#modals",
         "sequelize": "^6.13.0",
         "sqlite3": "^5.0.2",
         "uuid": "^8.3.2"
