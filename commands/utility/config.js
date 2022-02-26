@@ -28,11 +28,7 @@ module.exports = {
                 .setRequired(true)
         ),
     execute: async (interaction) => {
-        if (
-            !interaction.member.permissions.has(
-                Permissions.FLAGS.MANAGE_GUILD
-            )
-        )
+        if (!interaction.member.permissions.has(Permissions.FLAGS.MANAGE_GUILD))
             return await interaction.reply({
                 content: `You must have the ${inlineCode(
                     "Manage Server"
@@ -82,6 +78,6 @@ module.exports = {
             extraGiveawayMessage: extraOption.value,
         })
 
-        await interaction.reply(`Changes saved!`)
+        await interaction.reply({ content: `Changes saved!`, ephemeral: true })
     },
 }

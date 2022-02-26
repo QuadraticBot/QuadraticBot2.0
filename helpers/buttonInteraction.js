@@ -17,10 +17,18 @@ module.exports = async (interaction) => {
             `${interaction.user.tag} (${interaction.user.id}) is entering the giveaway ${giveaway.item} (${giveaway.uuid}). The message id is ${interaction.message.id}`
         )
 
+        console.log(
+            giveaway.requirements.split(","),
+            interaction.member.roles.cache,
+            interaction.member.roles.cache.hasAll(
+                ...giveaway.requirements.split(",")
+            )
+        )
+
         if (
             giveaway.requirements &&
             !interaction.member.roles.cache.hasAll(
-                giveaway.requirements.split(",")
+                ...giveaway.requirements.split(",")
             )
         )
             return await interaction.reply({
