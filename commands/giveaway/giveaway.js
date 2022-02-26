@@ -26,21 +26,21 @@ module.exports = {
             option
                 .setName("role_requirement_1")
                 .setDescription(
-                    "What Role is needed to enter this giveaway? (Optional)"
+                    "What role is needed to enter this giveaway? (Optional)"
                 )
         )
         .addRoleOption((option) =>
             option
                 .setName("role_requirement_2")
                 .setDescription(
-                    "What Role is needed to enter this giveaway? (Optional)"
+                    "What role is needed to enter this giveaway? (Optional)"
                 )
         )
         .addRoleOption((option) =>
             option
                 .setName("role_requirement_3")
                 .setDescription(
-                    "What Role is needed to enter this giveaway? (Optional)"
+                    "What role is needed to enter this giveaway? (Optional)"
                 )
         ),
 
