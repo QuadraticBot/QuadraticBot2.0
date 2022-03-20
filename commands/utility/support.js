@@ -8,7 +8,7 @@ module.exports = {
     execute: async (interaction) => {
         const button1 = new MessageButton()
             .setURL("https://www.henryhiles.com/#contact")
-            .setLabel("Contact Me (For General Questions)")
+            .setLabel("Contact Me (General Questions)")
             .setStyle("LINK")
 
         const button2 = new MessageButton()
