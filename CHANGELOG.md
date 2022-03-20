@@ -1,5 +1,11 @@
 # Changelog
 
+## 20/03/2022
+
+* Added trycatch statement to end.js as to avoid an error when a giveaway message is deleted.
+* Added support command.
+* Changed deployCommands.js.
+
 ## 25/02/2022
 
 * Fixed a bug that made giveaways that you added required roles to not being joinable.
