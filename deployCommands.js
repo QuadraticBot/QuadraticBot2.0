@@ -1,7 +1,7 @@
 const fs = require("fs")
 const { REST } = require("@discordjs/rest")
 const { Routes } = require("discord-api-types/v9")
-const { clientId, devGuildId, token } = require("./config.json")
+const { clientId, token, devGuildId } = require("./config.json")
 
 const commands = []
 
@@ -19,7 +19,7 @@ commandFolders.forEach((folder) => {
 const rest = new REST({ version: "9" }).setToken(token)
 
 rest.put(
-    process.env.DEVELOPMENT
+    devGuildId
         ? Routes.applicationGuildCommands(clientId, devGuildId)
         : Routes.applicationCommands(clientId),
     { body: commands }
@@ -27,9 +27,7 @@ rest.put(
     .then(() =>
         console.log(
             `Deployed all application commands to ${
-                process.env.DEVELOPMENT
-                    ? `test server (${devGuildId})`
-                    : "all servers"
+                devGuildId ? `test server (${devGuildId})` : "all servers"
             }.`
         )
     )
