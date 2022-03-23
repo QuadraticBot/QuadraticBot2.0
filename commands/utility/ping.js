@@ -5,7 +5,7 @@ module.exports = {
         .setName("ping")
         .setDescription("Replies with latency and uptime."),
     execute: async (interaction) => {
-        let message = `Pong!\nLatency: ${bold(interaction.client.ws.ping)}.`
+        let message = `Pong!\nLatency: ${bold(interaction.client.ws.ping)}ms.`
         let totalSeconds = interaction.client.uptime / 1000
         const days = Math.floor(totalSeconds / 86400)
         totalSeconds %= 86400
