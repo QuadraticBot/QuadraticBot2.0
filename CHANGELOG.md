@@ -1,5 +1,9 @@
 # Changelog
 
+## 23/03/2022
+
+* Changed ping command to include "ms".
+
 ## 20/03/2022
 
 * Added trycatch statement to end.js as to avoid an error when a giveaway message is deleted.
