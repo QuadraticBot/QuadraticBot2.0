@@ -67,9 +67,17 @@ module.exports = {
                 ephemeral: true,
             })
 
-        const channel = await interaction.client.channels.fetch(
-            guildPrefs.giveawayChannelId
-        )
+        let channel
+
+        try {
+            channel = await interaction.client.channels.fetch(
+                guildPrefs.giveawayChannelId
+            )
+        } catch (error) {
+            if (error.code == 10003)
+                return interaction.reply("Please run `/config` again.")
+            throw error
+        }
 
         if (
             !channel
@@ -153,6 +161,7 @@ module.exports = {
             daysOption * 86400000 +
             hoursOption * 3600000 +
             minutesOption * 60000
+
         const ends = Date.now() + time
 
         if (!time || time <= 0)
@@ -161,9 +170,9 @@ module.exports = {
                 ephemeral: true,
             })
 
-        if (!Number(winnersOption))
+        if (!Number(winnersOption) || Number(winnersOption) < 1)
             return await modalSubmitInteraction.reply({
-                content: "Winnners must be a number.",
+                content: "Winnners must be a number greater than 0.",
                 ephemeral: true,
             })
 
@@ -178,7 +187,7 @@ module.exports = {
         )
 
         const embed = new MessageEmbed()
-            .setColor("#0099ff")
+            .setColor("#14bbaa")
             .setTitle("New giveaway!")
             .setAuthor({
                 name: interaction.user.tag,

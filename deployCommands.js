@@ -16,6 +16,13 @@ commandFolders.forEach((folder) => {
     })
 })
 
+const contextMenuFiles = fs.readdirSync("./contextMenus")
+
+contextMenuFiles.forEach((contextMenuFile) => {
+    const contextMenu = require(`./contextMenus/${contextMenuFile}`)
+    commands.push(contextMenu.data.toJSON())
+})
+
 const rest = new REST({ version: "9" }).setToken(token)
 
 rest.put(

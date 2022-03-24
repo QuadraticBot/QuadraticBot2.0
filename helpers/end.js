@@ -1,15 +1,22 @@
 const { userMention, time: timestamp, bold } = require("@discordjs/builders")
 const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js")
 const db = require("./database.js")
-module.exports = async (giveaway, client) => {
-    const time = giveaway.endDate - Date.now()
+const smartTimeout = require("./smartTimeout.js")
+module.exports = async (giveaway, client, instant, rerollWinners) => {
+    const time = instant ? 0 : giveaway.endDate - Date.now()
+
     console.log(
         `Ender executed for giveaway ${giveaway.uuid}. Ending in ${
             time > 0 ? time : 0
         }.`
     )
-    setTimeout(
+
+    smartTimeout(
         async () => {
+            await giveaway.reload()
+            if (giveaway.isFinished && !rerollWinners)
+                return console.log("Giveaway already ended")
+
             const guildPrefs = await db.GuildPrefs.findOne({
                 where: {
                     guildId: giveaway.guildId,
@@ -42,7 +49,10 @@ module.exports = async (giveaway, client) => {
                             },
                             {
                                 name: "Requirements",
-                                value: message.embeds[0].fields[2].value,
+                                value: (
+                                    message.embeds[0].fields[2] ??
+                                    message.embeds[0].fields[1]
+                                ).value,
                                 inline: true,
                             }
                         )
@@ -59,7 +69,7 @@ module.exports = async (giveaway, client) => {
                     })
 
                     const embed2 = new MessageEmbed()
-                        .setColor("#0099ff")
+                        .setColor("#14bbaa")
                         .setTitle("Giveaway Ended!\nNobody joined...")
                         .setDescription(`Giveaway for ${bold(giveaway.item)}!`)
                         .addField("Won by", "Nobody")
@@ -72,7 +82,9 @@ module.exports = async (giveaway, client) => {
                         })
                     await giveaway.update({ isFinished: true })
                     return await message.reply({
-                        content: `Hosted by: ${userMention(giveaway.userId)}.`,
+                        content: `${
+                            rerollWinners ? "Rerolled. " : ""
+                        }Hosted by: ${userMention(giveaway.userId)}.`,
                         embeds: [embed2],
                     })
                 }
@@ -84,9 +96,9 @@ module.exports = async (giveaway, client) => {
                 for (
                     let i = 0;
                     i <
-                    (giveaway.winners > entrants.length
+                    ((rerollWinners || giveaway.winners) > entrants.length
                         ? entrants.length
-                        : giveaway.winners);
+                        : rerollWinners || giveaway.winners);
                     i++
                 ) {
                     const winnerIndex = Math.floor(
@@ -98,7 +110,7 @@ module.exports = async (giveaway, client) => {
                     entrantList.splice(winnerIndex, 1)
                 }
 
-                const embed = new MessageEmbed()
+                const embed = new MessageEmbed(message.embeds[0])
                     .setTitle("Giveaway Complete!")
                     .setFields(
                         {
@@ -115,16 +127,26 @@ module.exports = async (giveaway, client) => {
                         },
                         {
                             name: "Requirements",
-                            value: message.embeds[0].fields[2].value,
+                            value: (
+                                message.embeds[0].fields[2] ??
+                                message.embeds[0].fields[1]
+                            ).value,
                         }
                     )
+
+                const row = new MessageActionRow().addComponents(
+                    new MessageButton(
+                        message.components[0].components[0]
+                    ).setDisabled(true)
+                )
+
                 await message.edit({
-                    content: null,
                     embeds: [embed],
-                    components: [],
+                    components: [row],
                 })
+
                 const embed2 = new MessageEmbed()
-                    .setColor("#0099ff")
+                    .setColor("#14bbaa")
                     .setTitle("Giveaway Ended!")
                     .setDescription(`Giveaway for ${bold(giveaway.item)}!`)
                     .addFields({
@@ -139,15 +161,21 @@ module.exports = async (giveaway, client) => {
                         }),
                     })
                 await message.reply({
-                    content: `Won by ${winnerNames.join(
-                        ", "
-                    )}! Hosted by: ${userMention(giveaway.userId)}.\n ${
-                        giveaway.winners > entrants.length
+                    content: `${
+                        rerollWinners ? "Rerolled. " : ""
+                    }Won by ${winnerNames.join(", ")}! Hosted by: ${userMention(
+                        giveaway.userId
+                    )}.\n ${
+                        (rerollWinners || giveaway.winners) > entrants.length
                             ? `The last ${
-                                  giveaway.winners - entrants.length == 1
+                                  (rerollWinners || giveaway.winners) -
+                                      entrants.length ==
+                                  1
                                       ? "winner slot was"
                                       : `${
-                                            giveaway.winners - entrants.length
+                                            (rerollWinners ||
+                                                giveaway.winners) -
+                                            entrants.length
                                         } winner slots were`
                               } not chosen as there were not enough entrants.`
                             : ""
@@ -161,8 +189,11 @@ module.exports = async (giveaway, client) => {
             } catch (error) {
                 if (error.code == 10008) {
                     console.log("Message deleted, removing giveaway")
-                    await giveaway.update({ isFinished: true })
+                    await giveaway.update({
+                        isFinished: true,
+                    })
                 }
+                console.error(error)
             }
         },
         time > 0 ? time : 0

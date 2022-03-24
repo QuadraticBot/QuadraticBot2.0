@@ -5,6 +5,7 @@ const { token } = require("./config.json")
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] })
 
 client.commands = new Collection()
+client.contextMenus = new Collection()
 
 const commandFolders = fs.readdirSync("./commands")
 
@@ -17,6 +18,13 @@ commandFolders.forEach((folder) => {
         const command = require(`./commands/${folder}/${file}`)
         client.commands.set(command.data.name, command)
     })
+})
+
+const contextMenus = fs.readdirSync("./contextMenus")
+
+contextMenus.forEach((contextMenuFile) => {
+    const contextMenu = require(`./contextMenus/${contextMenuFile}`)
+    client.contextMenus.set(contextMenu.data.name, contextMenu)
 })
 
 const eventFiles = fs
