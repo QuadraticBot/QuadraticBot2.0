@@ -4,11 +4,11 @@
     "description": "A simple giveaway bot written in Discord.JS",
     "main": "index.js",
     "scripts": {
-        "devDeploy": "DEVELOPMENT=true node deployCommands.js"
+        "devDeploy": "DEVELOPMENT=true node deployCommands.js",
+        "start": "npx nodemon"
     },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
+    "author": "Henry Hiles",
+    "license": "GNU GENERAL PUBLIC LICENSE",
     "dependencies": {
         "@discordjs/builders": "^0.11.0",
         "@discordjs/rest": "^0.2.0-canary.0",
@@ -17,5 +17,8 @@
         "sequelize": "^6.13.0",
         "sqlite3": "^5.0.2",
         "uuid": "^8.3.2"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.16"
     }
 }
