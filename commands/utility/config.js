@@ -1,8 +1,9 @@
-const { SlashCommandBuilder, inlineCode } = require("@discordjs/builders")
-const { ChannelType } = require("discord-api-types/v9")
-const { Permissions } = require("discord.js")
-const db = require("../../helpers/database.js")
-module.exports = {
+import { SlashCommandBuilder, inlineCode } from "@discordjs/builders"
+import { ChannelType } from "discord-api-types/v9"
+import { Permissions } from "discord.js"
+import { db } from "helpers"
+
+export default {
     data: new SlashCommandBuilder()
         .setName("config")
         .setDescription("Configure the bot")

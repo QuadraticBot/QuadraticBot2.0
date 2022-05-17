@@ -1,8 +1,10 @@
-const buttonInteraction = require("../helpers/buttonInteraction")
-const commandInteraction = require("../helpers/commandInteraction")
-const contextMenuInteraction = require("../helpers/contextMenuInteraction")
+import {
+    buttonInteraction,
+    commandInteraction,
+    contextMenuInteraction,
+} from "helpers"
 
-module.exports = {
+export default {
     name: "interactionCreate",
     execute: async (interaction) => {
         if (interaction.isCommand()) commandInteraction(interaction)

@@ -1,9 +1,8 @@
-const { ContextMenuCommandBuilder } = require("@discordjs/builders")
-const { ApplicationCommandType } = require("discord-api-types/v9")
-const db = require("../helpers/database.js")
-const end = require("../helpers/end")
+import { ContextMenuCommandBuilder } from "@discordjs/builders"
+import { ApplicationCommandType } from "discord-api-types/v9"
+import { db, end } from "helpers"
 
-module.exports = {
+export default {
     data: new ContextMenuCommandBuilder()
         .setName("End Giveaway")
         .setType(ApplicationCommandType.Message),

@@ -1,7 +1,7 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const { MessageActionRow, MessageButton } = require("discord.js")
+import { SlashCommandBuilder } from "@discordjs/builders"
+import { MessageActionRow, MessageButton } from "discord.js"
 
-module.exports = {
+export default {
     data: new SlashCommandBuilder()
         .setName("support")
         .setDescription("Report bugs and get help."),

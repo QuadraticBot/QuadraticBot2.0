@@ -1,6 +1,6 @@
-const db = require("../helpers/database.js")
-const end = require("../helpers/end.js")
-module.exports = {
+import { db, end } from "helpers"
+
+export default {
     name: "ready",
     once: true,
     execute: async (client) => {

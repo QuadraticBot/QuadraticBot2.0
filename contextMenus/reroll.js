@@ -1,11 +1,9 @@
-const { ContextMenuCommandBuilder } = require("@discordjs/builders")
-const { ApplicationCommandType } = require("discord-api-types/v9")
-const { Modal, MessageActionRow, TextInputComponent } = require("discord.js")
-const addModal = require("../helpers/addModal")
-const db = require("../helpers/database.js")
-const end = require("../helpers/end")
+import { ContextMenuCommandBuilder } from "@discordjs/builders"
+import { ApplicationCommandType } from "discord-api-types/v9"
+import { Modal, MessageActionRow, TextInputComponent } from "discord.js"
+import { addModal, db, end } from "helpers"
 
-module.exports = {
+export default {
     data: new ContextMenuCommandBuilder()
         .setName("Reroll Giveaway")
         .setType(ApplicationCommandType.Message),

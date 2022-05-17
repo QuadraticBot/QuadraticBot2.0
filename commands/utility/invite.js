@@ -1,7 +1,7 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const { MessageActionRow, MessageButton, Permissions } = require("discord.js")
+import { SlashCommandBuilder } from "@discordjs/builders"
+import { MessageActionRow, MessageButton, Permissions } from "discord.js"
 
-module.exports = {
+export default {
     data: new SlashCommandBuilder()
         .setName("invite")
         .setDescription("Invite me to your server!"),

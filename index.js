@@ -1,38 +1,36 @@
-const fs = require("fs")
-const { Client, Collection, Intents } = require("discord.js")
-const { token } = require("./config.json")
-
+import { readdir } from "fs/promises"
+import { Client, Collection, Intents } from "discord.js"
+import config from "./config.json" assert { type: "json" }
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] })
 
 client.commands = new Collection()
 client.contextMenus = new Collection()
 
-const commandFolders = fs.readdirSync("./commands")
+const commandFolders = await readdir("./commands")
+for (const folder of commandFolders) {
+    const commandFiles = await readdir(`./commands/${folder}`)
 
-commandFolders.forEach((folder) => {
-    const commandFiles = fs
-        .readdirSync(`./commands/${folder}`)
-        .filter((file) => file.endsWith(".js"))
-
-    commandFiles.forEach((file) => {
-        const command = require(`./commands/${folder}/${file}`)
+    for (const file of commandFiles) {
+        const { default: command } = await import(
+            `./commands/${folder}/${file}`
+        )
         client.commands.set(command.data.name, command)
-    })
-})
+    }
+}
 
-const contextMenus = fs.readdirSync("./contextMenus")
+const contextMenus = await readdir("./contextMenus")
 
-contextMenus.forEach((contextMenuFile) => {
-    const contextMenu = require(`./contextMenus/${contextMenuFile}`)
+for (const contextMenuFile of contextMenus) {
+    const { default: contextMenu } = await import(
+        `./contextMenus/${contextMenuFile}`
+    )
     client.contextMenus.set(contextMenu.data.name, contextMenu)
-})
+}
 
-const eventFiles = fs
-    .readdirSync("./events")
-    .filter((file) => file.endsWith(".js"))
+const eventFiles = await readdir("./events")
 
-eventFiles.forEach((file) => {
-    const event = require(`./events/${file}`)
+for (const file of eventFiles) {
+    const { default: event } = await import(`./events/${file}`)
     try {
         if (event.once) {
             client.once(event.name, (...args) => event.execute(...args))
@@ -42,7 +40,7 @@ eventFiles.forEach((file) => {
     } catch (error) {
         console.error(error)
     }
-})
+}
 
 process.on("uncaughtException", (error) => {
     console.error(
@@ -50,4 +48,4 @@ process.on("uncaughtException", (error) => {
     )
 })
 
-client.login(token)
+client.login(config.token)

@@ -1,24 +1,22 @@
-const {
+import {
     SlashCommandBuilder,
     bold,
-    time: timestamp,
+    time as timestamp,
     channelMention,
     roleMention,
-} = require("@discordjs/builders")
-const end = require("../../helpers/end.js")
-const { v4: uuidv4 } = require("uuid")
-const addModal = require("../../helpers/addModal")
-const {
+} from "@discordjs/builders"
+import { end, db, addModal } from "helpers"
+import { v4 as uuidv4 } from "uuid"
+import {
     MessageActionRow,
     MessageEmbed,
     MessageButton,
     Permissions,
     TextInputComponent,
     Modal,
-} = require("discord.js")
-const db = require("../../helpers/database.js")
+} from "discord.js"
 
-module.exports = {
+export default {
     data: new SlashCommandBuilder()
         .setName("giveaway")
         .setDescription("Starts a giveaway.")

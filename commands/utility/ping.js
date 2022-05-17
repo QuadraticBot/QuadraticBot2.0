@@ -1,6 +1,6 @@
-const { SlashCommandBuilder, bold } = require("@discordjs/builders")
+import { SlashCommandBuilder, bold } from "@discordjs/builders"
 
-module.exports = {
+export default {
     data: new SlashCommandBuilder()
         .setName("ping")
         .setDescription("Replies with latency and uptime."),
