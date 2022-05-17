@@ -1,7 +1,7 @@
 import fs from "fs"
 import { REST } from "@discordjs/rest"
 import { Routes } from "discord-api-types/v9"
-import { clientId, token, devGuildId } from "./config.json"
+import config from "./config.json" assert { type: "json" }
 
 const commands = []
 
@@ -13,7 +13,9 @@ for (const folder of commandFolders) {
         .filter((file) => file.endsWith(".js"))
 
     for (const file of commandFiles) {
-        const command = await import(`./commands/${folder}/${file}`)
+        const { default: command } = await import(
+            `./commands/${folder}/${file}`
+        )
         commands.push(command.data.toJSON())
     }
 }
@@ -21,22 +23,26 @@ for (const folder of commandFolders) {
 const contextMenuFiles = fs.readdirSync("./contextMenus")
 
 for (const contextMenuFile of contextMenuFiles) {
-    const contextMenu = await import(`./contextMenus/${contextMenuFile}`)
+    const { default: contextMenu } = await import(
+        `./contextMenus/${contextMenuFile}`
+    )
     commands.push(contextMenu.data.toJSON())
 }
 
-const rest = new REST({ version: "9" }).setToken(token)
+const rest = new REST({ version: "9" }).setToken(config.token)
 
 rest.put(
-    devGuildId
-        ? Routes.applicationGuildCommands(clientId, devGuildId)
-        : Routes.applicationCommands(clientId),
+    config.devGuildId
+        ? Routes.applicationGuildCommands(config.clientId, config.devGuildId)
+        : Routes.applicationCommands(config.clientId),
     { body: commands }
 )
     .then(() =>
         console.log(
             `Deployed all application commands to ${
-                devGuildId ? `test server (${devGuildId})` : "all servers"
+                config.devGuildId
+                    ? `test server (${config.devGuildId})`
+                    : "all servers"
             }.`
         )
     )
