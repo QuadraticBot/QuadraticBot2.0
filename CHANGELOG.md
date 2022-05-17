@@ -1,9 +1,14 @@
 # Changelog
 
+## 17/5/2022
+- Switched to pnpm
+- Changed syntax from CommonJS to ES6
+- Changed helpers to be a node module (pnpm only)
+
 ## 23/03/2022
 
 -   Changed ping command to include "ms".
--   Added support for context menus
+-   Added support for context menus.
 -   Added end giveaway context menu (contextMenus/end.js)
 -   Added reroll giveaway context menu (contextMenus/reroll.js)
 
