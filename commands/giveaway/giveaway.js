@@ -53,18 +53,6 @@ export default {
                 ephemeral: true,
             })
 
-        if (
-            guildPrefs.giveawayRoleId &&
-            !interaction.member.roles.cache.has(guildPrefs.giveawayRoleId) &&
-            !interaction.member.permissions.has(Permissions.FLAGS.MANAGE_GUILD)
-        )
-            return await interaction.reply({
-                content: `You need the ${roleMention(
-                    guildPrefs.giveawayRoleId
-                )} role to use this command.`,
-                ephemeral: true,
-            })
-
         let channel
 
         try {

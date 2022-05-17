@@ -64,10 +64,6 @@ GuildPref.init(
             type: DataTypes.STRING,
             defaultValue: null,
         },
-        giveawayRoleId: {
-            type: DataTypes.STRING,
-            defaultValue: null,
-        },
     },
     { sequelize, modelName: "GuildPref" }
 )

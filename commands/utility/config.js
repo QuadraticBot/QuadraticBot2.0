@@ -19,14 +19,6 @@ export default {
                 .setName("extra_text")
                 .setDescription("Extra text to add to your giveaway messages.")
                 .setRequired(true)
-        )
-        .addRoleOption((option) =>
-            option
-                .setName("giveaway_role")
-                .setDescription(
-                    "Role needed to make giveaways. Set to @everyone for no role."
-                )
-                .setRequired(true)
         ),
     execute: async (interaction) => {
         if (!interaction.member.permissions.has(Permissions.FLAGS.MANAGE_GUILD))
@@ -37,8 +29,7 @@ export default {
                 ephemeral: true,
             })
 
-        const [channelOption, extraOption, roleOption] =
-            interaction.options.data
+        const [channelOption, extraOption] = interaction.options.data
 
         const [guildPrefs] = await db.GuildPrefs.findOrCreate({
             where: { guildId: interaction.guildId },
@@ -46,16 +37,6 @@ export default {
                 guildId: interaction.guildId,
             },
         })
-
-        if (roleOption) {
-            if (roleOption?.role?.id == interaction.guild.roles.everyone.id)
-                guildPrefs.update({ giveawayRoleId: null })
-            else guildPrefs.update({ giveawayRoleId: roleOption?.role?.id })
-
-            console.log(
-                `${roleOption?.role?.name} (${roleOption?.role?.id}) is the new giveaway making role in ${interaction.guild}.`
-            )
-        }
 
         if (
             !channelOption.channel
