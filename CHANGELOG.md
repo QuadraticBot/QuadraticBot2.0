@@ -1,9 +1,14 @@
 # Changelog
 
-## 17/5/2022
+## 18/05/2022
+- Fixed a bug where giveaways sometimes wouldn't end.
+- Remove an unneeded enviroment variable from package.json script.
+
+## 17/05/2022
 - Switched to pnpm
 - Changed syntax from CommonJS to ES6
-- Changed helpers to be a node module (pnpm only)
+- Changed helpers to be a node module\
+- Bot now only works on pnpm. (And perhaps yarn)
 
 ## 23/03/2022
 
