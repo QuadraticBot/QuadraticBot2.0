@@ -214,7 +214,7 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
                             {
                                 name: "Ended",
                                 value: timestamp(
-                                    Math.floor((time + Date.now()) / 1000),
+                                    Math.floor(giveaway.endDate / 1000),
                                     "R"
                                 ),
                                 inline: true,
@@ -276,9 +276,6 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
                     const winnerIndex = Math.floor(
                         Math.random() * entrants.length
                     )
-                    console.log(
-                        `WinnerIndex is ${winnerIndex}, entrantsList is ${entrantsList} (length is ${entrantsList.length}), entrants is ${entrants} (length is ${entrants.length}).`
-                    )
                     winnerNames[i] = userMention(
                         entrantsList[winnerIndex].userId
                     )
@@ -296,7 +293,7 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
                         {
                             name: "Ended",
                             value: timestamp(
-                                Math.floor((time + Date.now()) / 1000),
+                                Math.floor(giveaway.endDate / 1000),
                                 "R"
                             ),
                         },
