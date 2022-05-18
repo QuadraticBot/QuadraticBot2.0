@@ -274,12 +274,14 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
                     i++
                 ) {
                     const winnerIndex = Math.floor(
-                        Math.random() * entrants.length
+                        Math.random() * entrantsList.length
                     )
+
                     winnerNames[i] = userMention(
                         entrantsList[winnerIndex].userId
                     )
-                    entrantsList.splice(winnerIndex, 1)
+
+                    delete entrantsList[winnerIndex]
                 }
 
                 const embed = new MessageEmbed(message.embeds[0])
