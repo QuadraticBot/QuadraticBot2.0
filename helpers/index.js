@@ -195,12 +195,13 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
                 },
             })
 
-            const channel = await client.channels.fetch(
-                guildPrefs.giveawayChannelId
-            )
-
             try {
+                const channel = await client.channels.fetch(
+                    guildPrefs.giveawayChannelId
+                )
+
                 const message = await channel.messages.fetch(giveaway.messageId)
+
                 const entrants = await db.Entrants.findAll({
                     where: {
                         giveawayUuid: giveaway.uuid,
@@ -363,7 +364,12 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
             } catch (error) {
                 if (error.code == 10008) {
                     console.log("Message deleted, removing giveaway")
-                    await giveaway.update({
+                    return await giveaway.update({
+                        isFinished: true,
+                    })
+                } else if (error.code == 10003) {
+                    console.log("Channel deleted, removing giveaway")
+                    return await giveaway.update({
                         isFinished: true,
                     })
                 }
