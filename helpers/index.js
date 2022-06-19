@@ -214,10 +214,12 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
                         .setFields(
                             {
                                 name: "Ended",
-                                value: timestamp(
-                                    Math.floor(giveaway.endDate / 1000),
-                                    "R"
-                                ),
+                                value: instant
+                                    ? "Early"
+                                    : timestamp(
+                                          Math.floor(giveaway.endDate / 1000),
+                                          "R"
+                                      ),
                                 inline: true,
                             },
                             {
