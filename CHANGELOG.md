@@ -1,5 +1,8 @@
 # Changelog
 
+## 19/06/2022
+- Added Giveaway Info context menu.
+
 ## 18/05/2022
 - Fixed a bug where giveaways sometimes wouldn't end.
 - Remove an unneeded enviroment variable from package.json script.
