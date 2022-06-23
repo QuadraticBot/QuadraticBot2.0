@@ -19,6 +19,12 @@ export default {
                 .setName("extra_text")
                 .setDescription("Extra text to add to your giveaway messages.")
                 .setRequired(true)
+        )
+        .addBooleanOption((option) =>
+            option
+                .setName("dm_users")
+                .setDescription("DM users when the win a giveaway.")
+                .setRequired(true)
         ),
     execute: async (interaction) => {
         if (!interaction.member.permissions.has(Permissions.FLAGS.MANAGE_GUILD))
@@ -29,7 +35,7 @@ export default {
                 ephemeral: true,
             })
 
-        const [channelOption, extraOption] = interaction.options.data
+        const [channelOption, extraOption, dmUsers] = interaction.options.data
 
         const [guildPrefs] = await db.GuildPrefs.findOrCreate({
             where: { guildId: interaction.guildId },
@@ -58,6 +64,7 @@ export default {
         guildPrefs.update({
             giveawayChannelId: channelOption.channel.id,
             extraGiveawayMessage: extraOption.value,
+            DMUsers: dmUsers.value,
         })
 
         await interaction.reply({ content: `Changes saved!`, ephemeral: true })

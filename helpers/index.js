@@ -1,6 +1,11 @@
 import { Op } from "sequelize"
 import { v4 as uuidv4 } from "uuid"
-import { userMention, time as timestamp, bold } from "@discordjs/builders"
+import {
+    userMention,
+    time as timestamp,
+    bold,
+    hyperlink,
+} from "@discordjs/builders"
 import { MessageEmbed, MessageActionRow, MessageButton } from "discord.js"
 import { Sequelize, DataTypes, Model } from "sequelize"
 const sequelize = new Sequelize({
@@ -63,6 +68,10 @@ GuildPref.init(
         extraGiveawayMessage: {
             type: DataTypes.STRING,
             defaultValue: null,
+        },
+        DMUsers: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
         },
     },
     { sequelize, modelName: "GuildPref" }
@@ -196,7 +205,9 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
             })
 
             try {
-                const channel = await client.channels.fetch(
+                const guild = await client.guilds.fetch(guildPrefs.guildId)
+
+                const channel = await guild.channels.fetch(
                     guildPrefs.giveawayChannelId
                 )
 
@@ -311,6 +322,26 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
                         }
                     )
 
+                if (guildPrefs.DMUsers)
+                    for (const entrant of entrants) {
+                        const member = await guild.members.fetch(entrant.userId)
+
+                        const embed = new MessageEmbed()
+                            .setTitle(
+                                `You just won the giveaway for ${bold(
+                                    giveaway.item
+                                )}!`
+                            )
+                            .setDescription(
+                                `${hyperlink("Jump to message", message.url)}.`
+                            )
+
+                        await member.send({
+                            content: null,
+                            embeds: [embed],
+                        })
+                    }
+
                 const row = new MessageActionRow().addComponents(
                     new MessageButton(
                         message.components[0].components[0]
@@ -375,7 +406,8 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
                         isFinished: true,
                     })
                 }
-                console.error(error)
+
+                throw error
             }
         },
         time > 0 ? time : 0
