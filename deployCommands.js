@@ -38,7 +38,7 @@ rest.put(
     { body: commands }
 )
     .then(() =>
-        console.log(
+        console.info(
             `Deployed all application commands to ${
                 config.devGuildId
                     ? `test server (${config.devGuildId})`
