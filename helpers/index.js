@@ -186,7 +186,7 @@ export const paginator = async (
 export const end = async (giveaway, client, instant, rerollWinners) => {
     const time = instant ? 0 : giveaway.endDate - Date.now()
 
-    console.log(
+    console.info(
         `Ender executed for giveaway ${giveaway.uuid}. Ending in ${
             time > 0 ? time : 0
         }.`
@@ -196,7 +196,7 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
         async () => {
             await giveaway.reload()
             if (giveaway.isFinished && !rerollWinners)
-                return console.log("Giveaway already ended")
+                return console.info("Giveaway already ended")
 
             const guildPrefs = await db.GuildPrefs.findOne({
                 where: {
@@ -276,6 +276,7 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
                 }
 
                 const winnerNames = []
+                const winners = []
 
                 const entrantsList = [...entrants]
 
@@ -294,6 +295,7 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
                     winnerNames[i] = userMention(
                         entrantsList[winnerIndex].userId
                     )
+                    winners[i] = entrantsList[winnerIndex].userId
 
                     entrantsList.splice(winnerIndex, 1)
                 }
@@ -323,8 +325,8 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
                     )
 
                 if (guildPrefs.DMUsers)
-                    for (const entrant of entrants) {
-                        const member = await guild.members.fetch(entrant.userId)
+                    for (const winner of winners) {
+                        const member = await guild.members.fetch(winner)
 
                         const embed = new MessageEmbed()
                             .setTitle(
@@ -336,10 +338,16 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
                                 `${hyperlink("Jump to message", message.url)}.`
                             )
 
-                        await member.send({
-                            content: null,
-                            embeds: [embed],
-                        })
+                        try {
+                            await member.send({
+                                content: null,
+                                embeds: [embed],
+                            })
+                        } catch (error) {
+                            if (error.code === 50007)
+                                console.info("User has DMs turned off.")
+                            else throw error
+                        }
                     }
 
                 const row = new MessageActionRow().addComponents(
@@ -391,17 +399,17 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
                     embeds: [embed2],
                 })
                 await giveaway.update({ isFinished: true })
-                console.log(
+                console.info(
                     `Giveaway ${giveaway.uuid} ended with ${entrants.length} entrants.`
                 )
             } catch (error) {
                 if (error.code == 10008) {
-                    console.log("Message deleted, removing giveaway")
+                    console.info("Message deleted, removing giveaway")
                     return await giveaway.update({
                         isFinished: true,
                     })
                 } else if (error.code == 10003) {
-                    console.log("Channel deleted, removing giveaway")
+                    console.info("Channel deleted, removing giveaway")
                     return await giveaway.update({
                         isFinished: true,
                     })
@@ -425,7 +433,7 @@ export const buttonInteraction = async (interaction) => {
                 content: "There was an error. Please try again later.",
                 ephemeral: true,
             })
-        console.log(
+        console.info(
             `${interaction.user.tag} (${interaction.user.id}) is entering the giveaway ${giveaway.item} (${giveaway.uuid}). The message id is ${interaction.message.id}`
         )
 
@@ -496,7 +504,7 @@ export const commandInteraction = async (interaction) => {
         await command.execute(interaction)
     } catch (error) {
         if (error.code == "INTERACTION_COLLECTOR_ERROR")
-            return console.log("Modal timed out")
+            return console.info("Modal timed out")
 
         console.error(error)
 
@@ -507,7 +515,7 @@ export const commandInteraction = async (interaction) => {
             })
         } catch (error) {
             if (error.code == "INTERACTION_ALREADY_REPLIED")
-                console.log("Modal error")
+                console.info("Modal error")
         }
     }
 }
@@ -529,7 +537,7 @@ export const contextMenuInteraction = async (interaction) => {
         await command.execute(interaction)
     } catch (error) {
         if (error.code == "INTERACTION_COLLECTOR_ERROR")
-            return console.log("Modal timed out")
+            return console.info("Modal timed out")
 
         console.error(error)
 
@@ -540,7 +548,7 @@ export const contextMenuInteraction = async (interaction) => {
             })
         } catch (error) {
             if (error.code == "INTERACTION_ALREADY_REPLIED")
-                console.log("Modal error")
+                console.error("Modal error")
         }
     }
 }
