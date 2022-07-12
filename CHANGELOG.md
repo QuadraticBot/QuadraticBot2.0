@@ -1,5 +1,8 @@
 # Changelog
 
+## 12/07/2022
+ - Fixed an error with ending giveaways when the user had DMs from the server turned off and the DMUsers config option was on.
+
 ## 19/06/2022
 - Added Giveaway Info context menu.
 
