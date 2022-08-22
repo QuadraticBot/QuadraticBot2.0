@@ -1,19 +1,23 @@
-import { SlashCommandBuilder } from "@discordjs/builders"
-import { MessageActionRow, MessageButton, Permissions } from "discord.js"
+import {
+    SlashCommandBuilder,
+    ActionRowBuilder,
+    ButtonBuilder,
+    PermissionsBitField,
+} from "discord.js"
 
 export default {
     data: new SlashCommandBuilder()
         .setName("invite")
         .setDescription("Invite me to your server!"),
     execute: async (interaction) => {
-        const button = new MessageButton()
+        const button = new ButtonBuilder()
             .setURL(
                 interaction.client.generateInvite({
                     permissions: [
-                        Permissions.FLAGS.VIEW_CHANNEL,
-                        Permissions.FLAGS.EMBED_LINKS,
-                        Permissions.FLAGS.SEND_MESSAGES,
-                        Permissions.FLAGS.MENTION_EVERYONE,
+                        PermissionsBitField.Flags.ViewChannel,
+                        PermissionsBitField.Flags.EmbedLinks,
+                        PermissionsBitField.Flags.SendMessages,
+                        PermissionsBitField.Flags.MentionEveryone,
                     ],
                     scopes: ["applications.commands", "bot"],
                 })
@@ -21,7 +25,7 @@ export default {
             .setLabel("Invite Me")
             .setStyle("LINK")
 
-        const row = new MessageActionRow().addComponents(button)
+        const row = new ActionRowBuilder().addComponents(button)
         await interaction.reply({
             content: "Click the button below to invite me to your server.",
             components: [row],

@@ -1,6 +1,10 @@
-import { ContextMenuCommandBuilder } from "@discordjs/builders"
-import { ApplicationCommandType } from "discord-api-types/v9"
-import { Modal, MessageActionRow, TextInputComponent } from "discord.js"
+import {
+    ContextMenuCommandBuilder,
+    ModalBuilder,
+    ApplicationCommandType,
+    ActionRowBuilder,
+    TextInputComponent,
+} from "discord.js"
 import { addModal, db, end } from "helpers"
 
 export default {
@@ -32,7 +36,7 @@ export default {
                 ephemeral: true,
             })
 
-        const row = new MessageActionRow().addComponents(
+        const row = new ActionRowBuilder().addComponents(
             new TextInputComponent()
                 .setCustomId("newWinners")
                 .setLabel("Number of winners to reroll")
@@ -41,7 +45,7 @@ export default {
                 .setStyle("SHORT")
         )
 
-        const modal = new Modal()
+        const modal = new ModalBuilder()
             .setCustomId(`modal-${interaction.id}`)
             .addComponents([row])
             .setTitle("Reroll")

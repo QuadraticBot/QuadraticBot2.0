@@ -1,0 +1,17 @@
+name: Deploy Commands
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@6f350ca8484d8d55c2e361e74d17e638dabe713a
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+
+      - name: Execute remote command
+        run: ssh ${{ secrets.USER_AND_IP }} todo

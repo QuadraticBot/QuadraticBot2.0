@@ -1,6 +1,9 @@
-import { SlashCommandBuilder, inlineCode } from "@discordjs/builders"
-import { ChannelType } from "discord-api-types/v9"
-import { Permissions } from "discord.js"
+import {
+    SlashCommandBuilder,
+    PermissionsBitField,
+    ChannelType,
+    inlineCode,
+} from "discord.js"
 import { db } from "helpers"
 
 export default {
@@ -12,7 +15,7 @@ export default {
                 .setName("channel")
                 .setDescription("What channel can giveaways be created in?")
                 .setRequired(true)
-                .addChannelType(ChannelType.GuildText)
+                .addChannelTypes(ChannelType.GuildText)
         )
         .addStringOption((option) =>
             option
@@ -27,7 +30,11 @@ export default {
                 .setRequired(true)
         ),
     execute: async (interaction) => {
-        if (!interaction.member.permissions.has(Permissions.FLAGS.MANAGE_GUILD))
+        if (
+            !interaction.member.permissions.has(
+                PermissionsBitField.Flags.ManageGuild
+            )
+        )
             return await interaction.reply({
                 content: `You must have the ${inlineCode(
                     "Manage Server"
@@ -46,12 +53,12 @@ export default {
 
         if (
             !channelOption.channel
-                .permissionsFor(interaction.guild.me)
+                .permissionsFor(interaction.guild.members.me)
                 .has([
-                    Permissions.FLAGS.VIEW_CHANNEL,
-                    Permissions.FLAGS.EMBED_LINKS,
-                    Permissions.FLAGS.SEND_MESSAGES,
-                    Permissions.FLAGS.MENTION_EVERYONE,
+                    PermissionsBitField.Flags.ViewChannel,
+                    PermissionsBitField.Flags.EmbedLinks,
+                    PermissionsBitField.Flags.SendMessages,
+                    PermissionsBitField.Flags.MentionEveryone,
                 ])
         ) {
             return await interaction.reply({

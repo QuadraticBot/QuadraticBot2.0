@@ -5,8 +5,10 @@ import {
     time as timestamp,
     bold,
     hyperlink,
-} from "@discordjs/builders"
-import { MessageEmbed, MessageActionRow, MessageButton } from "discord.js"
+    EmbedBuilder,
+    ActionRowBuilder,
+    ButtonBuilder,
+} from "discord.js"
 import { Sequelize, DataTypes, Model } from "sequelize"
 const sequelize = new Sequelize({
     logging: false,
@@ -112,19 +114,19 @@ export const paginator = async (
 
     let page = 0
 
-    const button1 = new MessageButton(buttonList[0])
+    const button1 = new ButtonBuilder(buttonList[0])
     if (page < 1) {
         button1.setDisabled(true)
     }
-    const button2 = new MessageButton(buttonList[1])
+    const button2 = new ButtonBuilder(buttonList[1])
     if (page + 2 > pages.length) {
         button2.setDisabled(true)
     }
-    const row = new MessageActionRow().addComponents(button1, button2)
+    const row = new ActionRowBuilder().addComponents(button1, button2)
 
     const currentPage = await interaction.reply({
         embeds: [
-            new MessageEmbed(pages[page]).setFooter({
+            new EmbedBuilder(pages[page]).setFooter({
                 text: `${pageName} ${page + 1} / ${pages.length}`,
             }),
         ],
@@ -155,18 +157,18 @@ export const paginator = async (
             default:
                 break
         }
-        const button1 = new MessageButton(buttonList[0])
+        const button1 = new ButtonBuilder(buttonList[0])
         if (page < 1) {
             button1.setDisabled(true)
         }
-        const button2 = new MessageButton(buttonList[1])
+        const button2 = new ButtonBuilder(buttonList[1])
         if (page + 2 > pages.length) {
             button2.setDisabled(true)
         }
-        const newRow = new MessageActionRow().addComponents(button1, button2)
+        const newRow = new ActionRowBuilder().addComponents(button1, button2)
         await i.editReply({
             embeds: [
-                new MessageEmbed(pages[page]).setFooter({
+                new EmbedBuilder(pages[page]).setFooter({
                     text: `${pageName} ${page + 1} / ${pages.length}`,
                 }),
             ],
@@ -220,7 +222,7 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
                 })
 
                 if (entrants.length == 0) {
-                    const embed = new MessageEmbed(message.embeds[0])
+                    const embed = EmbedBuilder.from(message.embeds[0])
                         .setTitle("Giveaway Complete! Nobody joined...")
                         .setFields(
                             {
@@ -231,7 +233,6 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
                                           Math.floor(giveaway.endDate / 1000),
                                           "R"
                                       ),
-                                inline: true,
                             },
                             {
                                 name: "Requirements",
@@ -239,12 +240,11 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
                                     message.embeds[0].fields[2] ??
                                     message.embeds[0].fields[1]
                                 ).value,
-                                inline: true,
                             }
                         )
 
-                    const row = new MessageActionRow().addComponents(
-                        new MessageButton(
+                    const row = new ActionRowBuilder().addComponents(
+                        ButtonBuilder.from(
                             message.components[0].components[0]
                         ).setDisabled(true)
                     )
@@ -254,11 +254,13 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
                         components: [row],
                     })
 
-                    const embed2 = new MessageEmbed()
+                    const embed2 = new EmbedBuilder()
                         .setColor("#14bbaa")
                         .setTitle("Giveaway Ended!\nNobody joined...")
                         .setDescription(`Giveaway for ${bold(giveaway.item)}!`)
-                        .addField("Won by", "Nobody")
+                        .addFields([
+                            { name: "Won by", value: "Nobody", inline: true },
+                        ])
                         .setTimestamp()
                         .setFooter({
                             text: message.client.user.tag,
@@ -300,13 +302,12 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
                     entrantsList.splice(winnerIndex, 1)
                 }
 
-                const embed = new MessageEmbed(message.embeds[0])
+                const embed = EmbedBuilder.from(message.embeds[0])
                     .setTitle("Giveaway Complete!")
                     .setFields(
                         {
                             name: "Won by:",
                             value: bold(winnerNames.join(", ")),
-                            inline: true,
                         },
                         {
                             name: "Ended",
@@ -328,7 +329,7 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
                     for (const winner of winners) {
                         const member = await guild.members.fetch(winner)
 
-                        const embed = new MessageEmbed()
+                        const embed = new EmbedBuilder()
                             .setTitle(
                                 `You just won the giveaway for ${bold(
                                     giveaway.item
@@ -350,8 +351,8 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
                         }
                     }
 
-                const row = new MessageActionRow().addComponents(
-                    new MessageButton(
+                const row = new ActionRowBuilder().addComponents(
+                    ButtonBuilder.from(
                         message.components[0].components[0]
                     ).setDisabled(true)
                 )
@@ -361,7 +362,7 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
                     components: [row],
                 })
 
-                const embed2 = new MessageEmbed()
+                const embed2 = new EmbedBuilder()
                     .setColor("#14bbaa")
                     .setTitle("Giveaway Ended!")
                     .setDescription(`Giveaway for ${bold(giveaway.item)}!`)
@@ -548,7 +549,7 @@ export const contextMenuInteraction = async (interaction) => {
             })
         } catch (error) {
             if (error.code == "INTERACTION_ALREADY_REPLIED")
-                console.error("Modal error")
+                console.warn("Modal error")
         }
     }
 }

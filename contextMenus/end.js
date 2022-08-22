@@ -1,5 +1,4 @@
-import { ContextMenuCommandBuilder } from "@discordjs/builders"
-import { ApplicationCommandType } from "discord-api-types/v9"
+import { ContextMenuCommandBuilder, ApplicationCommandType } from "discord.js"
 import { db, end } from "helpers"
 
 export default {

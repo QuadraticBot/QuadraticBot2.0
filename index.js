@@ -1,7 +1,7 @@
 import { readdir } from "fs/promises"
-import { Client, Collection, Intents } from "discord.js"
+import { Client, Collection, GatewayIntentBits } from "discord.js"
 import config from "./config.json" assert { type: "json" }
-const client = new Client({ intents: [Intents.FLAGS.GUILDS] })
+const client = new Client({ intents: [GatewayIntentBits.Guilds] })
 
 client.commands = new Collection()
 client.contextMenus = new Collection()

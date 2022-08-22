@@ -1,11 +1,11 @@
 import {
     ContextMenuCommandBuilder,
+    EmbedBuilder,
+    ApplicationCommandType,
     roleMention,
     bold,
     time as timestamp,
-} from "@discordjs/builders"
-import { ApplicationCommandType } from "discord-api-types/v9"
-import { MessageEmbed } from "discord.js"
+} from "discord.js"
 import { db } from "helpers"
 
 export default {
@@ -33,7 +33,7 @@ export default {
 
         const time = timestamp(Math.floor(giveaway.endDate / 1000), "R")
 
-        const infoEmbed = new MessageEmbed()
+        const infoEmbed = new EmbedBuilder()
             .setColor("#14bbaa")
             .setTitle(`Giveaway for ${giveaway.item}`)
             .setAuthor(interaction.targetMessage.embeds[0].author)
@@ -44,24 +44,35 @@ export default {
                     dynamic: true,
                 }),
             })
-            .addField("Entrants:", bold(entrants.length), true)
-            .addField("Winners:", bold(giveaway.winners), true)
-            .addField(
-                `${giveaway.isFinished ? "Ended" : "Ends"}:`,
-                giveaway.isFinished
-                    ? giveaway.endDate > Date.now()
-                        ? "Early"
-                        : time
-                    : time,
-                true
-            )
-            .addField(
-                "Requirements:",
-                giveaway.requirements
-                    ?.split(",")
-                    .map((requirement) => roleMention(requirement))
-                    .join(", ") || "None",
-                true
+            .addFields(
+                {
+                    name: "Entrants:",
+                    value: bold(entrants.length),
+                    inline: true,
+                },
+                {
+                    name: "Winners:",
+                    value: bold(giveaway.winners),
+                    inline: true,
+                },
+                {
+                    name: `${giveaway.isFinished ? "Ended" : "Ends"}:`,
+                    value: giveaway.isFinished
+                        ? giveaway.endDate > Date.now()
+                            ? "Early"
+                            : time
+                        : time,
+                    inline: true,
+                },
+                {
+                    name: "Requirements:",
+                    value:
+                        giveaway.requirements
+                            ?.split(",")
+                            .map((requirement) => roleMention(requirement))
+                            .join(", ") || "None",
+                    inline: true,
+                }
             )
 
         await interaction.reply({

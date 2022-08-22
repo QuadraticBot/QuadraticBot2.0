@@ -1,20 +1,20 @@
 import {
     SlashCommandBuilder,
+    ActionRowBuilder,
+    EmbedBuilder,
+    ButtonBuilder,
+    TextInputBuilder,
+    ModalBuilder,
     bold,
     time as timestamp,
     channelMention,
     roleMention,
-} from "@discordjs/builders"
+    PermissionsBitField,
+    TextInputStyle,
+    ButtonStyle,
+} from "discord.js"
 import { end, db, addModal } from "helpers"
 import { v4 as uuidv4 } from "uuid"
-import {
-    MessageActionRow,
-    MessageEmbed,
-    MessageButton,
-    Permissions,
-    TextInputComponent,
-    Modal,
-} from "discord.js"
 
 export default {
     data: new SlashCommandBuilder()
@@ -67,12 +67,11 @@ export default {
 
         if (
             !channel
-                .permissionsFor(interaction.guild.me)
+                .permissionsFor(interaction.guild.members.me)
                 .has([
-                    Permissions.FLAGS.VIEW_CHANNEL,
-                    Permissions.FLAGS.EMBED_LINKS,
-                    Permissions.FLAGS.SEND_MESSAGES,
-                    Permissions.FLAGS.MENTION_EVERYONE,
+                    PermissionsBitField.Flags.EmbedLinks,
+                    PermissionsBitField.Flags.SendMessages,
+                    PermissionsBitField.Flags.MentionEveryone,
                 ])
         ) {
             return await interaction.reply({
@@ -83,46 +82,47 @@ export default {
         }
 
         const rows = [
-            new MessageActionRow().addComponents(
-                new TextInputComponent()
+            new ActionRowBuilder().addComponents(
+                new TextInputBuilder()
                     .setCustomId("winners")
                     .setLabel("Winners")
                     .setPlaceholder("How many winners should this have?")
-                    .setRequired(true)
-                    .setStyle("SHORT")
+                    .setStyle(TextInputStyle.Short)
             ),
-            new MessageActionRow().addComponents(
-                new TextInputComponent()
+            new ActionRowBuilder().addComponents(
+                new TextInputBuilder()
                     .setCustomId("item")
                     .setLabel("Item")
                     .setPlaceholder("What are you giving away?")
-                    .setRequired(true)
-                    .setStyle("PARAGRAPH")
+                    .setStyle(TextInputStyle.Paragraph)
             ),
-            new MessageActionRow().addComponents(
-                new TextInputComponent()
+            new ActionRowBuilder().addComponents(
+                new TextInputBuilder()
                     .setCustomId("minutes")
                     .setLabel("Minutes")
                     .setPlaceholder("How many minutes should this last?")
-                    .setStyle("SHORT")
+                    .setStyle(TextInputStyle.Short)
+                    .setRequired(false)
             ),
-            new MessageActionRow().addComponents(
-                new TextInputComponent()
+            new ActionRowBuilder().addComponents(
+                new TextInputBuilder()
                     .setCustomId("hours")
                     .setLabel("Hours")
                     .setPlaceholder("How many hours should this last?")
-                    .setStyle("SHORT")
+                    .setStyle(TextInputStyle.Short)
+                    .setRequired(false)
             ),
-            new MessageActionRow().addComponents(
-                new TextInputComponent()
+            new ActionRowBuilder().addComponents(
+                new TextInputBuilder()
                     .setCustomId("days")
                     .setLabel("Days")
                     .setPlaceholder("How many days should this last?")
-                    .setStyle("SHORT")
+                    .setStyle(TextInputStyle.Short)
+                    .setRequired(false)
             ),
         ]
 
-        const modal = new Modal()
+        const modal = new ModalBuilder()
             .setCustomId(`modal-${interaction.id}`)
             .addComponents(rows)
             .setTitle("Giveaway")
@@ -164,15 +164,15 @@ export default {
 
         const uuid = uuidv4()
 
-        const row = new MessageActionRow().addComponents(
-            new MessageButton()
+        const row = new ActionRowBuilder().addComponents(
+            new ButtonBuilder()
                 .setCustomId(uuid)
                 .setLabel(" Enter Giveaway")
-                .setStyle("SUCCESS")
+                .setStyle(ButtonStyle.Success)
                 .setEmoji("891803406941974559")
         )
 
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setColor("#14bbaa")
             .setTitle("New giveaway!")
             .setAuthor({
@@ -183,23 +183,36 @@ export default {
                 "https://gifimage.net/wp-content/uploads/2017/11/gift-gif-14.gif"
             )
             .setDescription(`Giveaway for ${bold(itemOption)}`)
-            .addField("Winners", bold(winnersOption), true)
-            .addField("Ends", timestamp(Math.floor(ends / 1000), "R"), true)
-            .addField(
-                "Requirements",
-                [
-                    roleMention(requirement1Option?.role?.id),
-                    roleMention(requirement2Option?.role?.id),
-                    roleMention(requirement3Option?.role?.id),
-                ]
-                    .filter(
-                        (requirement) =>
-                            requirement != "<@&undefined>" &&
-                            requirement !=
-                                roleMention(interaction.guild.roles.everyone.id)
-                    )
-                    .join(", ") || "None",
-                true
+            .addFields(
+                {
+                    name: "Winners",
+                    value: bold(winnersOption),
+                    inline: true,
+                },
+                {
+                    name: "Ends",
+                    value: timestamp(Math.floor(ends / 1000), "R"),
+                    inline: true,
+                },
+                {
+                    name: "Requirements",
+                    value:
+                        [
+                            roleMention(requirement1Option?.role?.id),
+                            roleMention(requirement2Option?.role?.id),
+                            roleMention(requirement3Option?.role?.id),
+                        ]
+                            .filter(
+                                (requirement) =>
+                                    requirement != "<@&undefined>" &&
+                                    requirement !=
+                                        roleMention(
+                                            interaction.guild.roles.everyone.id
+                                        )
+                            )
+                            .join(", ") || "None",
+                    inline: true,
+                }
             )
             .setTimestamp()
             .setFooter({

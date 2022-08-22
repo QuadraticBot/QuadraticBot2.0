@@ -9,7 +9,7 @@ export default {
     execute: async (interaction) => {
         if (interaction.isCommand()) commandInteraction(interaction)
         else if (interaction.isButton()) buttonInteraction(interaction)
-        else if (interaction.isContextMenu())
+        else if (interaction.isContextMenuCommand())
             contextMenuInteraction(interaction)
     },
 }
