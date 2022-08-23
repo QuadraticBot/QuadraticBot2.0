@@ -48,21 +48,18 @@ export default {
                 {
                     name: "Entrants:",
                     value: bold(entrants.length),
-                    inline: true,
                 },
                 {
                     name: "Winners:",
                     value: bold(giveaway.winners),
-                    inline: true,
                 },
                 {
                     name: `${giveaway.isFinished ? "Ended" : "Ends"}:`,
                     value: giveaway.isFinished
                         ? giveaway.endDate > Date.now()
-                            ? "Early"
+                            ? `Early`
                             : time
                         : time,
-                    inline: true,
                 },
                 {
                     name: "Requirements:",

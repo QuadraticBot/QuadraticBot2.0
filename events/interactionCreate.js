@@ -7,9 +7,9 @@ import {
 export default {
     name: "interactionCreate",
     execute: async (interaction) => {
-        if (interaction.isCommand()) commandInteraction(interaction)
-        else if (interaction.isButton()) buttonInteraction(interaction)
-        else if (interaction.isContextMenuCommand())
-            contextMenuInteraction(interaction)
+        if (interaction.isContextMenuCommand())
+            return contextMenuInteraction(interaction)
+        if (interaction.isCommand()) return commandInteraction(interaction)
+        if (interaction.isButton()) return buttonInteraction(interaction)
     },
 }

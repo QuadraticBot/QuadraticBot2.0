@@ -180,7 +180,7 @@ export default {
                 iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
             })
             .setThumbnail(
-                "https://gifimage.net/wp-content/uploads/2017/11/gift-gif-14.gif"
+                "https://media0.giphy.com/media/3oz8xBkRsgPTnbK1GM/giphy.gif"
             )
             .setDescription(`Giveaway for ${bold(itemOption)}`)
             .addFields(

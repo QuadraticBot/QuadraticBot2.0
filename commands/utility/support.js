@@ -1,5 +1,9 @@
-import { SlashCommandBuilder } from "discord.js"
-import { ActionRowBuilder, ButtonBuilder } from "discord.js"
+import {
+    SlashCommandBuilder,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+} from "discord.js"
 
 export default {
     data: new SlashCommandBuilder()
@@ -8,15 +12,28 @@ export default {
     execute: async (interaction) => {
         const button1 = new ButtonBuilder()
             .setURL("https://www.henryhiles.com/#contact")
-            .setLabel("Contact Me (General Questions)")
-            .setStyle("LINK")
+            .setLabel("Contact Me")
+            .setStyle(ButtonStyle.Link)
 
         const button2 = new ButtonBuilder()
-            .setURL("https://github.com/Henry-Hiles/QuadraticBot2.0/issues")
-            .setLabel("Github Issues (Report Bugs)")
-            .setStyle("LINK")
+            .setURL(
+                "https://github.com/Henry-Hiles/QuadraticBot2.0/issues/new?template=bug_report.md"
+            )
+            .setLabel("Report Bugs")
+            .setStyle(ButtonStyle.Link)
 
-        const row = new ActionRowBuilder().addComponents(button1, button2)
+        const button3 = new ButtonBuilder()
+            .setURL(
+                "https://github.com/Henry-Hiles/QuadraticBot2.0/issues/new?template=feature_request.md"
+            )
+            .setLabel("Request a Feature")
+            .setStyle(ButtonStyle.Link)
+
+        const row = new ActionRowBuilder().addComponents(
+            button1,
+            button2,
+            button3
+        )
 
         await interaction.reply({
             content: "Get support here:",

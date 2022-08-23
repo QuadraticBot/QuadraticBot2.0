@@ -3,7 +3,8 @@ import {
     ModalBuilder,
     ApplicationCommandType,
     ActionRowBuilder,
-    TextInputComponent,
+    TextInputBuilder,
+    TextInputStyle,
 } from "discord.js"
 import { addModal, db, end } from "helpers"
 
@@ -37,12 +38,12 @@ export default {
             })
 
         const row = new ActionRowBuilder().addComponents(
-            new TextInputComponent()
+            new TextInputBuilder()
                 .setCustomId("newWinners")
                 .setLabel("Number of winners to reroll")
                 .setPlaceholder("Number of Winners")
                 .setRequired(true)
-                .setStyle("SHORT")
+                .setStyle(TextInputStyle.Short)
         )
 
         const modal = new ModalBuilder()

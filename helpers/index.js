@@ -228,7 +228,7 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
                             {
                                 name: "Ended",
                                 value: instant
-                                    ? "Early"
+                                    ? `Early (${timestamp(Date.now())})`
                                     : timestamp(
                                           Math.floor(giveaway.endDate / 1000),
                                           "R"
@@ -311,10 +311,15 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
                         },
                         {
                             name: "Ended",
-                            value: timestamp(
-                                Math.floor(giveaway.endDate / 1000),
-                                "R"
-                            ),
+                            value: instant
+                                ? `Early (${timestamp(
+                                      Math.floor(Date.now() / 1000),
+                                      "R"
+                                  )})`
+                                : timestamp(
+                                      Math.floor(giveaway.endDate / 1000),
+                                      "R"
+                                  ),
                         },
                         {
                             name: "Requirements",
