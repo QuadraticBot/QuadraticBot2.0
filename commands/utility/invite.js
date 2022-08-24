@@ -3,6 +3,7 @@ import {
     ActionRowBuilder,
     ButtonBuilder,
     PermissionsBitField,
+    ButtonStyle,
 } from "discord.js"
 
 export default {
@@ -19,11 +20,11 @@ export default {
                         PermissionsBitField.Flags.SendMessages,
                         PermissionsBitField.Flags.MentionEveryone,
                     ],
-                    scopes: ["applications.commands", "bot"],
+                    scopes: ["bot"],
                 })
             )
             .setLabel("Invite Me")
-            .setStyle("LINK")
+            .setStyle(ButtonStyle.Link)
 
         const row = new ActionRowBuilder().addComponents(button)
         await interaction.reply({
