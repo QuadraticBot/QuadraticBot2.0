@@ -6,14 +6,13 @@ import {
     TextInputBuilder,
     ModalBuilder,
     bold,
-    time as timestamp,
     channelMention,
     roleMention,
     PermissionsBitField,
     TextInputStyle,
     ButtonStyle,
 } from "discord.js"
-import { end, db, addModal } from "helpers"
+import { end, db, addModal, msTimestamp } from "helpers"
 import { v4 as uuidv4 } from "uuid"
 
 export default {
@@ -191,7 +190,7 @@ export default {
                 },
                 {
                     name: "Ends",
-                    value: timestamp(Math.floor(ends / 1000), "R"),
+                    value: msTimestamp(ends, "R"),
                     inline: true,
                 },
                 {
@@ -212,6 +211,10 @@ export default {
                             )
                             .join(", ") || "None",
                     inline: true,
+                },
+                {
+                    name: "Entrants",
+                    value: bold(0),
                 }
             )
             .setTimestamp()

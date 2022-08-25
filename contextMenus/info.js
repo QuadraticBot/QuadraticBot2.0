@@ -4,9 +4,8 @@ import {
     ApplicationCommandType,
     roleMention,
     bold,
-    time as timestamp,
 } from "discord.js"
-import { db } from "helpers"
+import { db, msTimestamp } from "helpers"
 
 export default {
     data: new ContextMenuCommandBuilder()
@@ -31,7 +30,7 @@ export default {
             },
         })
 
-        const time = timestamp(Math.floor(giveaway.endDate / 1000), "R")
+        const time = msTimestamp(giveaway.endDate, "R")
 
         const infoEmbed = new EmbedBuilder()
             .setColor("#14bbaa")
@@ -47,11 +46,15 @@ export default {
             .addFields(
                 {
                     name: "Entrants:",
-                    value: bold(entrants.length),
+                    value: `${entrants.length} entrant${
+                        entrants.length == 1 ? "" : "s"
+                    }`,
                 },
                 {
                     name: "Winners:",
-                    value: bold(giveaway.winners),
+                    value: `${giveaway.winners} winner${
+                        giveaway.winners == 1 ? "" : "s"
+                    }`,
                 },
                 {
                     name: `${giveaway.isFinished ? "Ended" : "Ends"}:`,
@@ -68,7 +71,6 @@ export default {
                             ?.split(",")
                             .map((requirement) => roleMention(requirement))
                             .join(", ") || "None",
-                    inline: true,
                 }
             )
 

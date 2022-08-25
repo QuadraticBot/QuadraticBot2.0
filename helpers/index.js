@@ -8,6 +8,7 @@ import {
     EmbedBuilder,
     ActionRowBuilder,
     ButtonBuilder,
+    ButtonStyle,
 } from "discord.js"
 import { Sequelize, DataTypes, Model } from "sequelize"
 const sequelize = new Sequelize({
@@ -108,7 +109,10 @@ export const paginator = async (
 ) => {
     if (!pages) throw new Error("Pages are not given.")
     if (!buttonList) throw new Error("Buttons are not given.")
-    if (buttonList[0].style === "LINK" || buttonList[1].style === "LINK")
+    if (
+        buttonList[0].style === ButtonStyle.Link ||
+        buttonList[1].style === ButtonStyle.Link
+    )
         throw new Error("Link buttons are not supported.")
     if (buttonList.length !== 2) throw new Error("Need two buttons.")
 
@@ -185,6 +189,9 @@ export const paginator = async (
     return currentPage
 }
 
+export const msTimestamp = (time, type) =>
+    timestamp(Math.floor(time / 1000), type)
+
 export const end = async (giveaway, client, instant, rerollWinners) => {
     const time = instant ? 0 : giveaway.endDate - Date.now()
 
@@ -222,17 +229,17 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
                 })
 
                 if (entrants.length == 0) {
-                    const embed = EmbedBuilder.from(message.embeds[0])
-                        .setTitle("Giveaway Complete! Nobody joined...")
-                        .setFields(
+                    const embed = EmbedBuilder.from(message.embeds[0]).setTitle(
+                        "Giveaway Complete! Nobody joined..."
+                    )
+
+                    !rerollWinners &&
+                        embed.setFields(
                             {
                                 name: "Ended",
                                 value: instant
-                                    ? `Early (${timestamp(Date.now())})`
-                                    : timestamp(
-                                          Math.floor(giveaway.endDate / 1000),
-                                          "R"
-                                      ),
+                                    ? `Early (${msTimestamp(Date.now(), "R")})`
+                                    : msTimestamp(giveaway.endDate, "R"),
                             },
                             {
                                 name: "Requirements",
@@ -309,25 +316,27 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
                             name: "Won by:",
                             value: bold(winnerNames.join(", ")),
                         },
-                        {
-                            name: "Ended",
-                            value: instant
-                                ? `Early (${timestamp(
-                                      Math.floor(Date.now() / 1000),
-                                      "R"
-                                  )})`
-                                : timestamp(
-                                      Math.floor(giveaway.endDate / 1000),
-                                      "R"
-                                  ),
-                        },
-                        {
-                            name: "Requirements",
-                            value: (
-                                message.embeds[0].fields[2] ??
-                                message.embeds[0].fields[1]
-                            ).value,
-                        }
+                        rerollWinners
+                            ? message.embeds[0].fields.find(
+                                  (field) =>
+                                      field.name == "Ends" ||
+                                      field.name == "Ended"
+                              )
+                            : {
+                                  name: "Ended",
+                                  value: instant
+                                      ? `Early (${msTimestamp(
+                                            Date.now(),
+                                            "R"
+                                        )})`
+                                      : msTimestamp(giveaway.endDate, "R"),
+                              },
+                        message.embeds[0].fields.find(
+                            (field) => field.name == "Requirements"
+                        ),
+                        message.embeds[0].fields.find(
+                            (field) => field.name == "Entrants"
+                        )
                     )
 
                 if (guildPrefs.DMUsers)
@@ -439,8 +448,9 @@ export const buttonInteraction = async (interaction) => {
                 content: "There was an error. Please try again later.",
                 ephemeral: true,
             })
+
         console.info(
-            `${interaction.user.tag} (${interaction.user.id}) is entering the giveaway ${giveaway.item} (${giveaway.uuid}). The message id is ${interaction.message.id}`
+            `${interaction.user.tag} (${interaction.user.id}) is attempting to enter the giveaway ${giveaway.item} (${giveaway.uuid}) The message id is ${interaction.message.id}`
         )
 
         if (
@@ -467,6 +477,10 @@ export const buttonInteraction = async (interaction) => {
                 ephemeral: true,
             })
 
+        console.info(
+            `${interaction.user.tag} (${interaction.user.id}) has entered the giveaway for ${giveaway.item} (${giveaway.uuid})`
+        )
+
         const result = await db.Entrants.findOrCreate({
             where: {
                 [Op.and]: [
@@ -481,18 +495,34 @@ export const buttonInteraction = async (interaction) => {
             },
         })
 
-        if (result[1])
-            await interaction.reply({
+        if (result[1]) {
+            const newEmbed = interaction.message.embeds[0]
+            const entrantsField = newEmbed.fields.find(
+                (field) => field.name == "Entrants"
+            )
+
+            entrantsField.value = bold(
+                Number(
+                    entrantsField.value.slice(2, entrantsField.value.length - 2)
+                ) + 1
+            )
+
+            interaction.message.edit({
+                embeds: [EmbedBuilder.from(interaction.message.embeds[0])],
+            })
+
+            return await interaction.reply({
                 content: `You have successfully entered the giveaway for ${bold(
                     giveaway.item
                 )}!`,
                 ephemeral: true,
             })
-        else
-            await interaction.reply({
-                content: "You already entered this giveaway.",
-                ephemeral: true,
-            })
+        }
+
+        await interaction.reply({
+            content: "You already entered this giveaway.",
+            ephemeral: true,
+        })
     } catch (error) {
         console.error(error)
         await interaction.reply({
