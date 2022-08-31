@@ -15,12 +15,10 @@ It's a rewrite of my original closed-source Discord bot, Quadratic Giveaways.
 ### Config: `/config`
 Configure the bot to your needs. You must run `/config` before `/giveaway`.  
 
-![image](https://user-images.githubusercontent.com/71790868/154084383-a0a5af4e-2cc4-4a5b-aeae-f5d7e92f3c8f.png)
-
 **Arguments**:  
 ❶ Channel (Required): Channel for giveaways to be created in.  
 ❷ Extra Text (Required): Extra text to be displayed along with your giveaways.  
-❸ Giveaway Role (Required): The role requred for server members to create giveaways.
+❸ DMUsers (Required): DM users when they win a giveaway.
 
 
 ### Giveaway: `/giveaway`
