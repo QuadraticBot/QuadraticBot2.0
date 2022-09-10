@@ -157,7 +157,7 @@ export default {
 
         if (!Number(winnersOption) || Number(winnersOption) < 1)
             return await modalSubmitInteraction.reply({
-                content: "Winnners must be a number greater than 0.",
+                content: "Winners must be a number greater than 0.",
                 ephemeral: true,
             })
 
@@ -166,7 +166,7 @@ export default {
         const row = new ActionRowBuilder().addComponents(
             new ButtonBuilder()
                 .setCustomId(uuid)
-                .setLabel(" Enter Giveaway")
+                .setLabel("Enter Giveaway")
                 .setStyle(ButtonStyle.Success)
                 .setEmoji("891803406941974559")
         )
