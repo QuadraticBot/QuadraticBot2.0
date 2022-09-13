@@ -1,7 +1,18 @@
 # Changelog
 
+## 31/08/2022
+- Update README.md
+
+## 25/08/2022
+- Add entrants number in giveaway embed.
+
+## 23/08/2022
+
+- Update Discord.JS to v14.
+- Add config.yml for issue templates.
+
 ## 12/07/2022
- - Fixed an error with ending giveaways when the user had DMs from the server turned off and the DMUsers config option was on.
+- Fixed an error with ending giveaways when the user had DMs from the server turned off and the DMUsers config option was on.
 
 ## 19/06/2022
 - Added Giveaway Info context menu.
