@@ -157,7 +157,7 @@ export default {
 
         if (!Number(winnersOption) || Number(winnersOption) < 1)
             return await modalSubmitInteraction.reply({
-                content: "Winnners must be a number greater than 0.",
+                content: "Winners must be a number greater than 0.",
                 ephemeral: true,
             })
 
@@ -232,6 +232,7 @@ export default {
             item: itemOption,
             winners: winnersOption,
             endDate: ends,
+            channelId: channel.id,
             requirements:
                 [
                     requirement1Option?.role?.id,

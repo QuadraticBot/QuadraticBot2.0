@@ -27,6 +27,7 @@ Giveaway.init(
         },
         userId: DataTypes.STRING,
         guildId: DataTypes.STRING,
+        channelId: DataTypes.STRING,
         item: DataTypes.STRING,
         winners: DataTypes.INTEGER,
         endDate: DataTypes.STRING,
@@ -217,7 +218,7 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
                 const guild = await client.guilds.fetch(guildPrefs.guildId)
 
                 const channel = await guild.channels.fetch(
-                    guildPrefs.giveawayChannelId
+                    giveaway.channelId || guildPrefs.giveawayChannelId
                 )
 
                 const message = await channel.messages.fetch(giveaway.messageId)
