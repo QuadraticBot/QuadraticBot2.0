@@ -1,7 +1,10 @@
 # Changelog
 
+## 05/10/2022
+- Fix https://github.com/Henry-Hiles/QuadraticBot2.0/issues/12.
+
 ## 31/08/2022
-- Update README.md
+- Update README.md.
 
 ## 25/08/2022
 - Add entrants number in giveaway embed.
