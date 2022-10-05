@@ -429,6 +429,11 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
                     return await giveaway.update({
                         isFinished: true,
                     })
+                } else if (error.code == 50001) {
+                    console.info("Bot no longer in guild, removing giveaway")
+                    return await giveaway.update({
+                        isFinished: true,
+                    })
                 }
 
                 throw error
