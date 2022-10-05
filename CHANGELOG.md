@@ -1,7 +1,7 @@
 # Changelog
 
 ## 05/10/2022
-- Fix https://github.com/Henry-Hiles/QuadraticBot2.0/issues/12.
+- Fix https://github.com/Henry-Hiles/QuadraticBot2.0/issues/15.
 
 ## 31/08/2022
 - Update README.md.
