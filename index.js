@@ -45,8 +45,7 @@ for (const file of eventFiles) {
 process.on("uncaughtException", (error) => {
     console.error(
         `There was an uncaught error:`,
-        error.stack ?? error.toString(),
-        `Code: ${error.code}`
+        error.stack ?? error.toString()
     )
 })
 
