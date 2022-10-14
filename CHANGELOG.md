@@ -1,7 +1,7 @@
 # Changelog
 
 ## 14/10/2022
-- Create Discord server: https://discord.gg/qAuf27YQry
+- Created Discord server: https://discord.gg/qAuf27YQry
 - Add Discord server to README.md
 - Add Discord seever to /invite command
 
