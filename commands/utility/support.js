@@ -29,10 +29,18 @@ export default {
             .setLabel("Request a Feature")
             .setStyle(ButtonStyle.Link)
 
+        const button4 = new ButtonBuilder()
+            .setURL(
+                "https://discord.gg/qAuf27YQry"
+            )
+            .setLabel("Join the Discord")
+            .setStyle(ButtonStyle.Link)
+
         const row = new ActionRowBuilder().addComponents(
             button1,
             button2,
-            button3
+            button3,
+            button4
         )
 
         await interaction.reply({
