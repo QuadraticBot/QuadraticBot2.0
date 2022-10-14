@@ -3,7 +3,7 @@
 ## 14/10/2022
 - Created Discord server: https://discord.gg/qAuf27YQry
 - Add Discord server to README.md
-- Add Discord seever to /invite command
+- Add Discord seever to /support command
 
 ## 05/10/2022
 - Fix https://github.com/Henry-Hiles/QuadraticBot2.0/issues/15.
