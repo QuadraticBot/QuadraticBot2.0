@@ -50,3 +50,6 @@ Note: Only include devGuildId when you would like commands to be deployed only t
 * You must use pnpm. (Yarn __may__ also work)
 
 If you use the bot publicly please give credit in the bots description. Thank you.
+
+## Community
+Discord server: https://discord.gg/qAuf27YQry
