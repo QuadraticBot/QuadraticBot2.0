@@ -41,13 +41,13 @@ This project was built using handcrafted Javascript and [Discord.js](https://dis
 
 ## Self-hosting
 
-Though it is easier to just invite the bot, it is possible to self-host. Just create a `config.json` file at the root of the project with a format like this.   
+Though it is reccomended to use the main version of the bot, it is possible to self-host. Just create a `config.json` file at the root of the project with a format like this.   
 ![image](https://user-images.githubusercontent.com/71790868/155026869-8974c09f-a9dd-4d64-9659-c920646fb608.png)  
 Note: Only include devGuildId when you would like commands to be deployed only there. Omiting it will cause commands to be deployed to all servers.
 
 * To get a client id and token register a new application here: <https://discord.com/developers/applications>.
 * To deploy your commands use `node deployCommands.js`.
-* You must use pnpm. (Yarn __may__ also work)
+* You must use pnpm. (Yarn __might__ also work)
 
 If you use the bot publicly please give credit in the bots description. Thank you.
 
