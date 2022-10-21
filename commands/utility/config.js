@@ -72,7 +72,7 @@ export default {
         console.log(
             `ChannelID: ${channelOption.channel.id}, Message: ${extraOption.value}, DMusers: ${dmUsers.value}`
         )
-        guildPrefs.update({
+        await guildPrefs.update({
             giveawayChannelId: channelOption.channel.id,
             extraGiveawayMessage: extraOption.value,
             DMUsers: dmUsers.value,
