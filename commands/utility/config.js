@@ -43,13 +43,15 @@ export default {
             })
 
         const [channelOption, extraOption, dmUsers] = interaction.options.data
-
+        console.log("About to create")
         const [guildPrefs] = await db.GuildPrefs.findOrCreate({
             where: { guildId: interaction.guildId },
             defaults: {
                 guildId: interaction.guildId,
             },
         })
+
+        console.log(guildPrefs)
 
         if (
             !channelOption.channel
@@ -67,12 +69,15 @@ export default {
                 ephemeral: true,
             })
         }
-
+        console.log(
+            `ChannelID: ${channelOption.channel.id}, Message: ${extraOption.value}, DMusers: ${dmUsers.value}`
+        )
         guildPrefs.update({
             giveawayChannelId: channelOption.channel.id,
             extraGiveawayMessage: extraOption.value,
             DMUsers: dmUsers.value,
         })
+        console.log("Created, about to reply.")
 
         await interaction.reply({ content: `Changes saved!`, ephemeral: true })
     },
