@@ -1,5 +1,8 @@
 # Changelog
 
+## 06/11/2022
+- Added cancel giveaway context menu.
+
 ## 14/10/2022
 - Created Discord server: https://discord.gg/qAuf27YQry
 - Add Discord server to README.md
