@@ -27,9 +27,9 @@ Create a giveaway. You must run `/config` first.
 **Arguments**  
 Winners (Required): The number of winners for this giveaway.  
 Item (Required): The item that is being given away.  
-Minutes (Required): The number of minutes for the giveaway to go on for.  
-Hours (Required): The number of hours for the giveaway to go on for.  
-Days (Required): The number of days for the giveaway to go on for.
+Minutes (Optional): The number of minutes for the giveaway to go on for.  
+Hours (Optional): The number of hours for the giveaway to go on for.  
+Days (Optional): The number of days for the giveaway to go on for.
 
 ### Invite: `/invite` Invite the bot to your server.
 
