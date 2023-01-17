@@ -31,7 +31,7 @@ export default {
 
         const button4 = new ButtonBuilder()
             .setURL(
-                "https://discord.gg/qAuf27YQry"
+                "https://discord.gg/XmF8GygG5N"
             )
             .setLabel("Join the Discord")
             .setStyle(ButtonStyle.Link)
