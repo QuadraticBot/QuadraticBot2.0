@@ -1,5 +1,10 @@
 # Changelog
 
+## 08/02/2022
+- Added /help.
+- General grammar fixes.
+- Changed devDeploy script to be called deploy.
+
 ## 06/11/2022
 - Added cancel giveaway context menu.
 
