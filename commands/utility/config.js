@@ -9,7 +9,7 @@ import { db } from "helpers"
 export default {
     data: new SlashCommandBuilder()
         .setName("config")
-        .setDescription("Configure the bot")
+        .setDescription("Configure this bot.")
         .addChannelOption((option) =>
             option
                 .setName("channel")

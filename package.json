@@ -4,7 +4,7 @@
     "description": "A simple, open-source, user-friendly Discord giveaway bot that uses the latest features, such as slash commands, timestamps, context menus, and buttons.",
     "main": "index.js",
     "scripts": {
-        "devDeploy": "node deployCommands.js"
+        "deploy": "node deployCommands.js"
     },
     "type": "module",
     "author": "Henry Hiles",

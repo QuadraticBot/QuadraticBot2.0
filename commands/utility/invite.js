@@ -9,7 +9,7 @@ import {
 export default {
     data: new SlashCommandBuilder()
         .setName("invite")
-        .setDescription("Invite me to your server!"),
+        .setDescription("Invite this bot to your server."),
     execute: async (interaction) => {
         const button = new ButtonBuilder()
             .setURL(
