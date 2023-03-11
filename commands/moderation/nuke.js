@@ -36,7 +36,8 @@ export default {
                 interaction.guild.channels.setPositions([{ channel: msg, position: position + 1 }])
                 
                 await msg.send({ embeds: [new EmbedBuilder().setTitle("Successfully nuke this channel").setDescription(`This Channel has been nuked by <@${interaction.user.id}> (╯°□°)╯︵ ┻━┻`).setColor("5865f2")] })
-        } catch(e) {
+        } catch(error) {
+            console.error(error)
             return await interaction.reply({ embeds: [new EmbedBuilder().setTitle("Something went wrong").setDescription(`There was an error while nuking the channel.`).setColor("5865f2")], ephemeral: true })
         }
     }
