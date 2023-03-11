@@ -47,9 +47,10 @@ Note: Only include devGuildId when you would like commands to be deployed only t
 
 * To get a client id and token register a new application here: <https://discord.com/developers/applications>.
 * To deploy your commands use `node deployCommands.js`.
-* You must use pnpm. (Yarn __might__ also work)
+* `pnpm` is reccomended.
 
 If you use the bot publicly please give credit in the bots description. Thank you.
 
 ## Community
 Discord server: https://discord.gg/XmF8GygG5N.
+Discussions: https://github.com/QuadraticBot/QuadraticBot2.0/discussions
