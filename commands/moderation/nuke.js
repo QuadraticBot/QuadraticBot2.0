@@ -54,6 +54,17 @@ export default {
 						.setColor("5865f2")
 				]
 			})
+			return await interaction.reply({
+				embeds: [
+					new EmbedBuilder()
+						.setTitle("Success")
+						.setDescription(
+							`Channel nuked successfully. (╯°□°)╯︵ ┻━┻`
+						)
+						.setColor("5865f2")
+				],
+				ephemeral: true
+			})
 		} catch (error) {
 			console.error(error)
 			return await interaction.reply({

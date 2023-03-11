@@ -1,7 +1,8 @@
 import { ActionRowBuilder } from "discord.js"
+import { ButtonBuilder } from "discord.js"
 import { EmbedBuilder, bold, userMention } from "discord.js"
 import { db } from "./database.js"
-import { msTimestamp } from "./utilities.js"
+import { msTimestamp, smartTimeout } from "./utilities.js"
 
 export const end = async (giveaway, client, instant, rerollWinners) => {
 	const time = instant ? 0 : giveaway.endDate - Date.now()

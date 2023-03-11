@@ -2,6 +2,7 @@ import { Op } from "sequelize"
 import { bold } from "discord.js"
 import { db } from "./database.js"
 import { EmbedBuilder } from "discord.js"
+import { v4 as uuidv4 } from "uuid"
 
 export const buttonInteraction = async (interaction) => {
 	try {
