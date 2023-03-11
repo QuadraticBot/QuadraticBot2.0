@@ -1,19 +1,18 @@
 {
-    "name": "quadraticbot2.0",
-    "version": "1.0.0",
-    "description": "A simple, open-source, user-friendly Discord giveaway bot that uses the latest features, such as slash commands, timestamps, context menus, and buttons.",
-    "main": "index.js",
-    "scripts": {
-        "deploy": "node deployCommands.js"
-    },
-    "type": "module",
-    "author": "Henry Hiles",
-    "license": "GNU GENERAL PUBLIC LICENSE",
-    "dependencies": {
-        "discord.js": "^14.6.0",
-        "helpers": "link:helpers",
-        "sequelize": "^6.25.3",
-        "sqlite3": "^5.1.2",
-        "uuid": "^9.0.0"
-    }
+	"name": "quadraticbot2.0",
+	"version": "1.0.0",
+	"description": "A simple, open-source, user-friendly Discord giveaway bot that uses the latest features, such as slash commands, timestamps, context menus, and buttons.",
+	"main": "index.js",
+	"scripts": {
+		"deploy": "node deployCommands.js"
+	},
+	"type": "module",
+	"author": "Henry Hiles",
+	"license": "GNU GENERAL PUBLIC LICENSE",
+	"dependencies": {
+		"discord.js": "^14.6.0",
+		"sequelize": "^6.25.3",
+		"sqlite3": "^5.1.2",
+		"uuid": "^9.0.0"
+	}
 }

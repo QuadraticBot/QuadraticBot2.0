@@ -5,14 +5,14 @@ specifiers:
   helpers: link:helpers
   sequelize: ^6.25.3
   sqlite3: ^5.1.2
-  uuid: ^8.3.2
+  uuid: ^9.0.0
 
 dependencies:
   discord.js: 14.6.0
   helpers: link:helpers
   sequelize: 6.25.3_sqlite3@5.1.2
   sqlite3: 5.1.2
-  uuid: 8.3.2
+  uuid: 9.0.0
 
 packages:
 
@@ -1064,6 +1064,11 @@ packages:
 
   /uuid/8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    hasBin: true
+    dev: false
+
+  /uuid/9.0.0:
+    resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
     hasBin: true
     dev: false
 

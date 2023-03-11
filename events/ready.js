@@ -1,23 +1,24 @@
-import { db, end } from "helpers"
+import { db } from "../helpers/database.js"
+import { end } from "../helpers/end.js"
 
 export default {
-    name: "ready",
-    once: true,
-    execute: async (client) => {
-        console.info(`Ready! Logged in as ${client.user.tag}`)
-        try {
-            await db.Sequelize.authenticate()
-            console.info("Connection has been established successfully.")
-        } catch (error) {
-            console.error("Unable to connect to the database:", error)
-        }
+	name: "ready",
+	once: true,
+	execute: async (client) => {
+		console.info(`Ready! Logged in as ${client.user.tag}`)
+		try {
+			await db.Sequelize.authenticate()
+			console.info("Connection has been established successfully.")
+		} catch (error) {
+			console.error("Unable to connect to the database:", error)
+		}
 
-        await db.Sequelize.sync()
+		await db.Sequelize.sync()
 
-        const giveaways = await db.Giveaways.findAll({
-            where: { isFinished: false },
-        })
+		const giveaways = await db.Giveaways.findAll({
+			where: { isFinished: false }
+		})
 
-        giveaways.forEach((giveaway) => end(giveaway, client))
-    },
+		giveaways.forEach((giveaway) => end(giveaway, client))
+	}
 }
