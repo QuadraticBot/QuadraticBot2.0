@@ -94,7 +94,7 @@ export default {
 					ephemeral: true
 				})
 			} else {
-				return interaction.reply({
+				return await interaction.reply({
 					content: "There was an error. Please try again later.",
 					ephemeral: true
 				})
