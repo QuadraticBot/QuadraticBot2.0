@@ -1,3 +1,9 @@
+import { Op } from "sequelize"
+import { bold } from "discord.js"
+import { db } from "../helpers/database.js"
+import { EmbedBuilder } from "discord.js"
+import { v4 as uuidv4 } from "uuid"
+
 export default {
 	name: "giveaway",
 	execute: async (interaction) => {

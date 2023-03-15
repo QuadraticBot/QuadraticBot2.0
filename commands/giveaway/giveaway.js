@@ -167,7 +167,7 @@ export default {
 
 		const row = new ActionRowBuilder().addComponents(
 			new ButtonBuilder()
-				.setCustomId(uuid)
+				.setCustomId("giveaway")
 				.setLabel(" Enter Giveaway")
 				.setStyle(ButtonStyle.Success)
 				.setEmoji("891803406941974559")
