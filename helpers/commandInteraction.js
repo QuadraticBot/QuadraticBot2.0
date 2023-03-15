@@ -18,6 +18,7 @@ export const commandInteraction = async (interaction) => {
 		} catch (error) {
 			if (error.code == "INTERACTION_ALREADY_REPLIED")
 				console.info("Modal error")
+			else console.error(error)
 		}
 	}
 }
