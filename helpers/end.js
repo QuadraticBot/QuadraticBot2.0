@@ -2,7 +2,7 @@ import { ActionRowBuilder } from "discord.js"
 import { ButtonBuilder } from "discord.js"
 import { EmbedBuilder, bold, userMention } from "discord.js"
 import { db } from "./database.js"
-import { msTimestamp, smartTimeout } from "./utilities.js"
+import { msTimestamp, randomIndex, smartTimeout } from "./utilities.js"
 
 export const end = async (giveaway, client, instant, rerollWinners) => {
 	const time = instant ? 0 : giveaway.endDate - Date.now()
@@ -109,9 +109,7 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
 						: rerollWinners || giveaway.winners);
 					i++
 				) {
-					const winnerIndex = Math.floor(
-						Math.random() * entrantsList.length
-					)
+					const winnerIndex = randomIndex(entrantsList)
 
 					winnerNames[i] = userMention(
 						entrantsList[winnerIndex].userId

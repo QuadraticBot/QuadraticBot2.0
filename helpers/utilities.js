@@ -22,3 +22,7 @@ export const addModal = async (sourceInteraction, modal, timeout = 120000) => {
 			filterInteraction.customId === `modal-${sourceInteraction.id}`
 	})
 }
+
+export const randomIndex = (array) => Math.floor(Math.random() * array.length)
+
+export const random = (array) => array[randomIndex(array)]

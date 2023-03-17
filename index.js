@@ -6,6 +6,7 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds] })
 
 client.commands = new Collection()
 client.contextMenus = new Collection()
+client.buttons = new Collection()
 
 const commandFolders = await readdir("./commands")
 for (const folder of commandFolders) {
@@ -26,6 +27,13 @@ for (const contextMenuFile of contextMenus) {
 		`./contextMenus/${contextMenuFile}`
 	)
 	client.contextMenus.set(contextMenu.data.name, contextMenu)
+}
+
+const buttonFiles = await readdir("./buttons")
+
+for (const buttonFile of buttonFiles) {
+	const { default: contextMenu } = await import(`./buttons/${buttonFile}`)
+	client.buttons.set(contextMenu.name, contextMenu)
 }
 
 const eventFiles = await readdir("./events")
