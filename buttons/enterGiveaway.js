@@ -5,7 +5,7 @@ import { EmbedBuilder } from "discord.js"
 import { v4 as uuidv4 } from "uuid"
 
 export default {
-	name: "giveaway",
+	name: "enterGiveaway",
 	execute: async (interaction) => {
 		try {
 			const giveaway = await db.Giveaways.findOne({

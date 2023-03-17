@@ -62,9 +62,12 @@ export default {
 			)
 		} catch (error) {
 			if (error.code == 10003)
-				return interaction.reply("Please run `/config` again.")
+				return await interaction.reply("Please run `/config` again.")
 			throw error
 		}
+
+		if (!channel)
+			return await interaction.reply("Please run `/config` again.")
 
 		if (
 			!channel
@@ -167,7 +170,7 @@ export default {
 
 		const row = new ActionRowBuilder().addComponents(
 			new ButtonBuilder()
-				.setCustomId("giveaway")
+				.setCustomId("enterGiveaway")
 				.setLabel(" Enter Giveaway")
 				.setStyle(ButtonStyle.Success)
 				.setEmoji("891803406941974559")
@@ -180,9 +183,6 @@ export default {
 				name: interaction.user.tag,
 				iconURL: interaction.user.displayAvatarURL({ dynamic: true })
 			})
-			.setThumbnail(
-				"https://media0.giphy.com/media/3oz8xBkRsgPTnbK1GM/giphy.gif"
-			)
 			.setDescription(`Giveaway for ${bold(itemOption)}`)
 			.addFields(
 				{
@@ -216,7 +216,8 @@ export default {
 				},
 				{
 					name: "Entrants",
-					value: bold(0)
+					value: bold(0),
+					inline: true
 				}
 			)
 			.setTimestamp()
