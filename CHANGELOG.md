@@ -1,5 +1,8 @@
 # Changelog
 
+## 17/03/2022
+- Reworked buttons
+
 ## 08/02/2022
 - Added /help.
 - General grammar fixes.
