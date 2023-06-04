@@ -15,6 +15,9 @@ It's a rewrite of my original closed-source Discord bot, Quadratic Giveaways.
 ### Config: `/config`
 Configure the bot to your needs. You must run `/config` before `/giveaway`.  
 
+### Support: `/support`
+Join our official Discord server.
+
 **Arguments**:  
 ❶ Channel (Required): Channel for giveaways to be created in.  
 ❷ Extra Text (Required): Extra text to be displayed along with your giveaways.  
@@ -34,6 +37,8 @@ Days (Optional): The number of days for the giveaway to go on for.
 ### Invite: `/invite` Invite the bot to your server.
 
 ### Ping: `/ping` Check the ping and uptime of the bot.
+
+### Help: `/help` See a command list along with descriptions.
 ---
 ## Technologies
 
