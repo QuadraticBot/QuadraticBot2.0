@@ -1,50 +1,65 @@
 # Changelog
 
+## 28/06/2023
+
+-   Added `/avatar` command, credit to HelvetiDeveloper for original code.
+
 ## 17/03/2022
-- Reworked buttons
+
+-   Reworked buttons
 
 ## 08/02/2022
-- Added /help.
-- General grammar fixes.
-- Changed devDeploy script to be called deploy.
+
+-   Added /help.
+-   General grammar fixes.
+-   Changed devDeploy script to be called deploy.
 
 ## 06/11/2022
-- Added cancel giveaway context menu.
+
+-   Added cancel giveaway context menu.
 
 ## 14/10/2022
-- Created Discord server: https://discord.gg/qAuf27YQry
-- Add Discord server to README.md
-- Add Discord seever to /support command
+
+-   Created Discord server: https://discord.gg/qAuf27YQry
+-   Add Discord server to README.md
+-   Add Discord seever to /support command
 
 ## 05/10/2022
-- Fix https://github.com/Henry-Hiles/QuadraticBot2.0/issues/15.
+
+-   Fix https://github.com/Henry-Hiles/QuadraticBot2.0/issues/15.
 
 ## 31/08/2022
-- Update README.md.
+
+-   Update README.md.
 
 ## 25/08/2022
-- Add entrants number in giveaway embed.
+
+-   Add entrants number in giveaway embed.
 
 ## 23/08/2022
 
-- Update Discord.JS to v14.
-- Add config.yml for issue templates.
+-   Update Discord.JS to v14.
+-   Add config.yml for issue templates.
 
 ## 12/07/2022
-- Fixed an error with ending giveaways when the user had DMs from the server turned off and the DMUsers config option was on.
+
+-   Fixed an error with ending giveaways when the user had DMs from the server turned off and the DMUsers config option was on.
 
 ## 19/06/2022
-- Added Giveaway Info context menu.
+
+-   Added Giveaway Info context menu.
 
 ## 18/05/2022
-- Fixed a bug where giveaways sometimes wouldn't end.
-- Remove an unneeded enviroment variable from package.json script.
+
+-   Fixed a bug where giveaways sometimes wouldn't end.
+-   Remove an unneeded enviroment variable from package.json script.
 
 ## 17/05/2022
-- Switched to pnpm
-- Changed syntax from CommonJS to ES6
-- Changed helpers to be a node module\
-- Bot now only works on pnpm. (And perhaps yarn)
+
+-   Switched to pnpm
+-   Changed syntax from CommonJS to ES6
+-   Changed helpers to be a node module\
+-   Bot now only works on pnpm. (And perhaps yarn)
 
 ## 23/03/2022
 
