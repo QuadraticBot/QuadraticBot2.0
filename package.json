@@ -11,9 +11,9 @@
 	"author": "Henry Hiles",
 	"license": "GNU GENERAL PUBLIC LICENSE",
 	"dependencies": {
-		"discord.js": "^14.9.0",
-		"sequelize": "^6.25.3",
-		"sqlite3": "^5.1.2",
+		"discord.js": "^14.11.0",
+		"sequelize": "^6.32.1",
+		"sqlite3": "^5.1.6",
 		"uuid": "^9.0.0"
 	},
 	"devDependencies": {
