@@ -10,12 +10,19 @@ import {
 	roleMention,
 	PermissionsBitField,
 	TextInputStyle,
-	ButtonStyle
+	ButtonStyle,
+	CommandInteraction,
+	ActionRow,
+	TextInputComponent,
+	Channel,
+	TextChannel,
+	ChatInputCommandInteraction
 } from "discord.js"
 import { v4 as uuidv4 } from "uuid"
 import { db } from "../../helpers/database.js"
 import { end } from "../../helpers/end.js"
 import { addModal, msTimestamp } from "../../helpers/utilities.js"
+import { QuadraticClient } from "../../helpers/quadraticClient.js"
 
 export default {
 	data: new SlashCommandBuilder()
@@ -43,7 +50,7 @@ export default {
 				)
 		),
 
-	execute: async (interaction) => {
+	execute: async (interaction: ChatInputCommandInteraction) => {
 		const guildPrefs = await db.GuildPrefs.findOne({
 			where: { guildId: interaction.guildId }
 		})
@@ -54,23 +61,24 @@ export default {
 				ephemeral: true
 			})
 
-		let channel
+		let textChannel: TextChannel
 
 		try {
-			channel = await interaction.client.channels.fetch(
+			const channel = await interaction.client.channels.fetch(
 				guildPrefs.giveawayChannelId
 			)
+			if (channel instanceof TextChannel) textChannel = channel
 		} catch (error) {
 			if (error.code == 10003)
 				return await interaction.reply("Please run `/config` again.")
 			throw error
 		}
 
-		if (!channel)
+		if (!textChannel)
 			return await interaction.reply("Please run `/config` again.")
 
 		if (
-			!channel
+			!textChannel
 				.permissionsFor(interaction.guild.members.me)
 				.has([
 					PermissionsBitField.Flags.EmbedLinks,
@@ -85,64 +93,71 @@ export default {
 			})
 		}
 
-		const rows = [
-			new ActionRowBuilder().addComponents(
-				new TextInputBuilder()
-					.setCustomId("winners")
-					.setLabel("Winners")
-					.setPlaceholder("How many winners should this have?")
-					.setStyle(TextInputStyle.Short)
-			),
-			new ActionRowBuilder().addComponents(
-				new TextInputBuilder()
-					.setCustomId("item")
-					.setLabel("Item")
-					.setPlaceholder("What are you giving away?")
-					.setStyle(TextInputStyle.Paragraph)
-			),
-			new ActionRowBuilder().addComponents(
-				new TextInputBuilder()
-					.setCustomId("minutes")
-					.setLabel("Minutes")
-					.setPlaceholder("How many minutes should this last?")
-					.setStyle(TextInputStyle.Short)
-					.setRequired(false)
-			),
-			new ActionRowBuilder().addComponents(
-				new TextInputBuilder()
-					.setCustomId("hours")
-					.setLabel("Hours")
-					.setPlaceholder("How many hours should this last?")
-					.setStyle(TextInputStyle.Short)
-					.setRequired(false)
-			),
-			new ActionRowBuilder().addComponents(
-				new TextInputBuilder()
-					.setCustomId("days")
-					.setLabel("Days")
-					.setPlaceholder("How many days should this last?")
-					.setStyle(TextInputStyle.Short)
-					.setRequired(false)
+		const buildTextInputRow = (textInputBuilder: TextInputBuilder) =>
+			new ActionRowBuilder<TextInputBuilder>().addComponents(
+				textInputBuilder
 			)
-		]
 
 		const modal = new ModalBuilder()
 			.setCustomId(`modal-${interaction.id}`)
-			.addComponents(rows)
+			.addComponents([
+				buildTextInputRow(
+					new TextInputBuilder()
+						.setCustomId("winners")
+						.setLabel("Winners")
+						.setPlaceholder("How many winners should this have?")
+						.setStyle(TextInputStyle.Short)
+				),
+				buildTextInputRow(
+					new TextInputBuilder()
+						.setCustomId("item")
+						.setLabel("Item")
+						.setPlaceholder("What are you giving away?")
+						.setStyle(TextInputStyle.Paragraph)
+				),
+				buildTextInputRow(
+					new TextInputBuilder()
+						.setCustomId("minutes")
+						.setLabel("Minutes")
+						.setPlaceholder("How many minutes should this last?")
+						.setStyle(TextInputStyle.Short)
+						.setRequired(false)
+				),
+				buildTextInputRow(
+					new TextInputBuilder()
+						.setCustomId("hours")
+						.setLabel("Hours")
+						.setPlaceholder("How many hours should this last?")
+						.setStyle(TextInputStyle.Short)
+						.setRequired(false)
+				),
+				buildTextInputRow(
+					new TextInputBuilder()
+						.setCustomId("days")
+						.setLabel("Days")
+						.setPlaceholder("How many days should this last?")
+						.setStyle(TextInputStyle.Short)
+						.setRequired(false)
+				)
+			])
 			.setTitle("Giveaway")
 
 		const modalSubmitInteraction = await addModal(interaction, modal)
 
-		const winnersOption =
-				modalSubmitInteraction.fields.getTextInputValue("winners"),
-			itemOption =
-				modalSubmitInteraction.fields.getTextInputValue("item"),
-			minutesOption =
-				modalSubmitInteraction.fields.getTextInputValue("minutes") || 0,
-			hoursOption =
-				modalSubmitInteraction.fields.getTextInputValue("hours") || 0,
-			daysOption =
-				modalSubmitInteraction.fields.getTextInputValue("days") || 0
+		const itemOption =
+			modalSubmitInteraction.fields.getTextInputValue("item")
+		const winnersOption = Number(
+			modalSubmitInteraction.fields.getTextInputValue("winners")
+		)
+		const minutesOption = Number(
+			modalSubmitInteraction.fields.getTextInputValue("minutes") || 0
+		)
+		const hoursOption = Number(
+			modalSubmitInteraction.fields.getTextInputValue("hours") || 0
+		)
+		const daysOption = Number(
+			modalSubmitInteraction.fields.getTextInputValue("days") || 0
+		)
 
 		const [requirement1Option, requirement2Option, requirement3Option] =
 			interaction.options.data
@@ -168,7 +183,7 @@ export default {
 
 		const uuid = uuidv4()
 
-		const row = new ActionRowBuilder().addComponents(
+		const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
 			new ButtonBuilder()
 				.setCustomId("enterGiveaway")
 				.setLabel(" Enter Giveaway")
@@ -181,13 +196,13 @@ export default {
 			.setTitle("New giveaway!")
 			.setAuthor({
 				name: interaction.user.tag,
-				iconURL: interaction.user.displayAvatarURL({ dynamic: true })
+				iconURL: interaction.user.displayAvatarURL()
 			})
 			.setDescription(`Giveaway for ${bold(itemOption)}`)
 			.addFields(
 				{
 					name: "Winners",
-					value: bold(winnersOption),
+					value: bold(winnersOption.toString()),
 					inline: true
 				},
 				{
@@ -216,16 +231,14 @@ export default {
 				},
 				{
 					name: "Entrants",
-					value: bold(0),
+					value: bold("0"),
 					inline: true
 				}
 			)
 			.setTimestamp()
 			.setFooter({
 				text: interaction.client.user.tag,
-				iconURL: interaction.client.user.displayAvatarURL({
-					dynamic: true
-				})
+				iconURL: interaction.client.user.displayAvatarURL()
 			})
 
 		const giveaway = await db.Giveaways.create({
@@ -235,7 +248,7 @@ export default {
 			item: itemOption,
 			winners: winnersOption,
 			endDate: ends,
-			channelId: channel.id,
+			channelId: textChannel.id,
 			requirements:
 				[
 					requirement1Option?.role?.id,
@@ -246,7 +259,7 @@ export default {
 					.join() || null
 		})
 
-		const message = await channel.send({
+		const message = await textChannel.send({
 			content: guildPrefs.extraGiveawayMessage,
 			embeds: [embed],
 			components: [row]
@@ -256,11 +269,11 @@ export default {
 
 		await modalSubmitInteraction.reply({
 			content: `Created! Check ${channelMention(
-				channel.id
+				textChannel.id
 			)} to see your new giveaway!`,
 			ephemeral: true
 		})
 
-		await end(giveaway, interaction.client)
+		await end(giveaway, interaction.client as QuadraticClient)
 	}
 }

@@ -2,7 +2,7 @@
 	"name": "quadraticbot2.0",
 	"version": "1.0.0",
 	"description": "A simple, open-source, user-friendly Discord giveaway bot that uses the latest features, such as slash commands, timestamps, context menus, and buttons.",
-	"main": "index.js",
+	"main": "index.ts",
 	"scripts": {
 		"deploy": "node deployCommands.js",
 		"dev": "nodemon"
@@ -17,6 +17,8 @@
 		"uuid": "^9.0.0"
 	},
 	"devDependencies": {
-		"nodemon": "^3.0.1"
+		"@types/uuid": "^9.0.3",
+		"nodemon": "^3.0.1",
+		"ts-node": "^10.9.1"
 	}
 }

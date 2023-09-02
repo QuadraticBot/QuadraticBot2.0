@@ -1,15 +1,15 @@
-import fs from "fs"
+import { readdirSync } from "fs"
 import { REST, Routes } from "discord.js"
 import config from "./config.json" assert { type: "json" }
 
 const commands = []
 
-const commandFolders = fs.readdirSync("./commands")
+const commandFolders = readdirSync("./commands")
 
 for (const folder of commandFolders) {
-	const commandFiles = fs
-		.readdirSync(`./commands/${folder}`)
-		.filter((file) => file.endsWith(".js"))
+	const commandFiles = readdirSync(`./commands/${folder}`).filter((file) =>
+		file.endsWith(".js")
+	)
 
 	for (const file of commandFiles) {
 		const { default: command } = await import(
@@ -19,7 +19,7 @@ for (const folder of commandFolders) {
 	}
 }
 
-const contextMenuFiles = fs.readdirSync("./contextMenus")
+const contextMenuFiles = readdirSync("./contextMenus")
 
 for (const contextMenuFile of contextMenuFiles) {
 	const { default: contextMenu } = await import(

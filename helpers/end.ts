@@ -1,10 +1,21 @@
-import { ActionRowBuilder } from "discord.js"
+import {
+	ActionRowBuilder,
+	ButtonComponent,
+	TextChannel,
+	hyperlink
+} from "discord.js"
 import { ButtonBuilder } from "discord.js"
 import { EmbedBuilder, bold, userMention } from "discord.js"
-import { db } from "./database.js"
+import { Giveaway, db } from "./database.js"
 import { msTimestamp, randomIndex, smartTimeout } from "./utilities.js"
+import { QuadraticClient } from "./quadraticClient.js"
 
-export const end = async (giveaway, client, instant, rerollWinners) => {
+export const end = async (
+	giveaway: Giveaway,
+	client: QuadraticClient,
+	instant: boolean = false,
+	rerollWinners?: number
+) => {
 	const time = instant ? 0 : giveaway.endDate - Date.now()
 
 	console.info(
@@ -31,6 +42,10 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
 				const channel = await guild.channels.fetch(
 					giveaway.channelId || guildPrefs.giveawayChannelId
 				)
+				if (!(channel instanceof TextChannel))
+					return console.log(
+						"Giveaway ended, but channel not TextChannel"
+					)
 
 				const message = await channel.messages.fetch(giveaway.messageId)
 
@@ -45,7 +60,7 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
 						"Giveaway Complete! Nobody joined..."
 					)
 
-					!rerollWinners &&
+					if (!rerollWinners)
 						embed.setFields(
 							{
 								name: "Ended",
@@ -62,38 +77,12 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
 							}
 						)
 
-					const row = new ActionRowBuilder().addComponents(
-						ButtonBuilder.from(
-							message.components[0].components[0]
-						).setDisabled(true)
-					)
+					const enterButton = message.components[0].components[0]
 
-					await message.edit({
-						embeds: [embed],
-						components: [row]
-					})
-
-					const embed2 = new EmbedBuilder()
-						.setColor("#14bbaa")
-						.setTitle("Giveaway Ended!\nNobody joined...")
-						.setDescription(`Giveaway for ${bold(giveaway.item)}!`)
-						.addFields([
-							{ name: "Won by", value: "Nobody", inline: true }
-						])
-						.setTimestamp()
-						.setFooter({
-							text: message.client.user.tag,
-							iconURL: message.client.user.displayAvatarURL({
-								dynamic: true
-							})
-						})
-					await giveaway.update({ isFinished: true })
-					return await message.reply({
-						content: `${
-							rerollWinners ? "Rerolled. " : ""
-						}Hosted by: ${userMention(giveaway.userId)}.`,
-						embeds: [embed2]
-					})
+					if (!(enterButton instanceof ButtonComponent))
+						return console.log(
+							"Giveaway ended, but enterButton not ButtonComponent"
+						)
 				}
 
 				const winnerNames = []
@@ -175,10 +164,15 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
 						}
 					}
 
-				const row = new ActionRowBuilder().addComponents(
-					ButtonBuilder.from(
-						message.components[0].components[0]
-					).setDisabled(true)
+				const enterButton = message.components[0].components[0]
+				console.log(enterButton)
+				if (!(enterButton instanceof ButtonComponent))
+					return console.log(
+						"Giveaway ended, enterButton not ButtonComponent"
+					)
+
+				const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+					ButtonBuilder.from(enterButton).setDisabled(true)
 				)
 
 				await message.edit({
@@ -197,9 +191,7 @@ export const end = async (giveaway, client, instant, rerollWinners) => {
 					.setTimestamp()
 					.setFooter({
 						text: message.client.user.tag,
-						iconURL: message.client.user.displayAvatarURL({
-							dynamic: true
-						})
+						iconURL: message.client.user.displayAvatarURL()
 					})
 				await message.reply({
 					content: `${

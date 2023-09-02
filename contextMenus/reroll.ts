@@ -4,17 +4,19 @@ import {
 	ApplicationCommandType,
 	ActionRowBuilder,
 	TextInputBuilder,
-	TextInputStyle
+	TextInputStyle,
+	MessageContextMenuCommandInteraction
 } from "discord.js"
 import { db } from "../helpers/database.js"
 import { end } from "../helpers/end.js"
 import { addModal } from "../helpers/utilities.js"
+import { QuadraticClient } from "../helpers/quadraticClient.js"
 
 export default {
 	data: new ContextMenuCommandBuilder()
 		.setName("Reroll Giveaway")
 		.setType(ApplicationCommandType.Message),
-	execute: async (interaction) => {
+	execute: async (interaction: MessageContextMenuCommandInteraction) => {
 		const giveaway = await db.Giveaways.findOne({
 			where: {
 				messageId: interaction.targetId
@@ -39,7 +41,7 @@ export default {
 				ephemeral: true
 			})
 
-		const row = new ActionRowBuilder().addComponents(
+		const row = new ActionRowBuilder<TextInputBuilder>().addComponents(
 			new TextInputBuilder()
 				.setCustomId("newWinners")
 				.setLabel("Number of winners to reroll")
@@ -55,16 +57,22 @@ export default {
 
 		const modalSubmitInteraction = await addModal(interaction, modal)
 
-		const winnersOption =
+		const winnersOption = Number(
 			modalSubmitInteraction.fields.getTextInputValue("newWinners")
+		)
 
-		if (!Number(winnersOption) || Number(winnersOption) < 1)
+		if (!winnersOption || winnersOption < 1)
 			return await modalSubmitInteraction.reply({
 				content: "Winners must be a number greater than 0.",
 				ephemeral: true
 			})
 
-		end(giveaway, interaction.client, true, winnersOption)
+		end(
+			giveaway,
+			interaction.client as QuadraticClient,
+			true,
+			winnersOption
+		)
 
 		await modalSubmitInteraction.reply({
 			content: "Giveaway Rerolled.",

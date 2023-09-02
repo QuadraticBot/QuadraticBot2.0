@@ -1,10 +1,11 @@
 import { db } from "../helpers/database.js"
 import { end } from "../helpers/end.js"
+import { QuadraticClient } from "../helpers/quadraticClient.js"
 
 export default {
 	name: "ready",
 	once: true,
-	execute: async (client) => {
+	execute: async (client: QuadraticClient) => {
 		console.info(`Ready! Logged in as ${client.user.tag}`)
 		try {
 			await db.Sequelize.authenticate()

@@ -1,11 +1,32 @@
-import { DataTypes, Model, Sequelize } from "sequelize"
+import {
+	DataTypes,
+	ForeignKey,
+	InferAttributes,
+	InferCreationAttributes,
+	Model,
+	Sequelize
+} from "sequelize"
 const sequelize = new Sequelize({
 	logging: false,
 	dialect: "sqlite",
 	storage: "database.sqlite"
 })
 
-class Giveaway extends Model {}
+export class Giveaway extends Model<
+	InferAttributes<Giveaway>,
+	InferCreationAttributes<Giveaway>
+> {
+	declare uuid: string
+	declare userId: string
+	declare guildId: string
+	declare channelId: string
+	declare item: string
+	declare winners: number
+	declare endDate: number
+	declare requirements: string
+	declare messageId: string
+	declare isFinished: boolean
+}
 Giveaway.init(
 	{
 		uuid: {
@@ -32,7 +53,14 @@ Giveaway.init(
 	{ sequelize, modelName: "giveaway" }
 )
 
-class Entrant extends Model {}
+class Entrant extends Model<
+	InferAttributes<Entrant>,
+	InferCreationAttributes<Entrant>
+> {
+	declare uuid: string
+	declare userId: string
+	declare giveawayUuid: ForeignKey<Giveaway["uuid"]>
+}
 Entrant.init(
 	{
 		uuid: {
@@ -42,14 +70,19 @@ Entrant.init(
 			unique: true
 		},
 		userId: DataTypes.STRING,
-		giveawayUuid: {
-			type: DataTypes.UUID,
-			foreignKey: true
-		}
+		giveawayUuid: DataTypes.UUID
 	},
 	{ sequelize, modelName: "entrant" }
 )
-class GuildPref extends Model {}
+class GuildPref extends Model<
+	InferAttributes<GuildPref>,
+	InferCreationAttributes<GuildPref>
+> {
+	declare guildId: string
+	declare giveawayChannelId: string
+	declare extraGiveawayMessage: string
+	declare DMUsers: boolean
+}
 GuildPref.init(
 	{
 		guildId: {

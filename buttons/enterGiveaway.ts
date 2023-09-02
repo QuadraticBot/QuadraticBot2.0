@@ -1,12 +1,18 @@
 import { Op } from "sequelize"
-import { bold } from "discord.js"
+import { ButtonInteraction, bold } from "discord.js"
 import { db } from "../helpers/database.js"
 import { EmbedBuilder } from "discord.js"
 import { v4 as uuidv4 } from "uuid"
 
 export default {
 	name: "enterGiveaway",
-	execute: async (interaction) => {
+	execute: async (interaction: ButtonInteraction) => {
+		if (!interaction.inCachedGuild())
+			return await interaction.reply({
+				content:
+					"An error occurred. Are you attempting to use this command in a DM?"
+			})
+
 		try {
 			const giveaway = await db.Giveaways.findOne({
 				where: { messageId: interaction.message.id }
@@ -67,12 +73,14 @@ export default {
 					)
 
 					entrantsField.value = bold(
-						Number(
-							entrantsField.value.slice(
-								2,
-								entrantsField.value.length - 2
-							)
-						) + 1
+						(
+							Number(
+								entrantsField.value.slice(
+									2,
+									entrantsField.value.length - 2
+								)
+							) + 1
+						).toString()
 					)
 
 					interaction.message.edit({

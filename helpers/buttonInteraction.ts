@@ -1,5 +1,10 @@
-export const buttonInteraction = async (interaction) => {
-	const button = interaction.client.buttons.get(interaction.customId)
+import { ButtonInteraction } from "discord.js"
+import { QuadraticClient } from "./quadraticClient.js"
+
+export const buttonInteraction = async (interaction: ButtonInteraction) => {
+	const button = (interaction.client as QuadraticClient).buttons.get(
+		interaction.customId
+	)
 	if (!button) return
 
 	try {

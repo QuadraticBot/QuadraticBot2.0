@@ -1,12 +1,17 @@
-import { ContextMenuCommandBuilder, ApplicationCommandType } from "discord.js"
+import {
+	ContextMenuCommandBuilder,
+	ApplicationCommandType,
+	MessageContextMenuCommandInteraction
+} from "discord.js"
 import { db } from "../helpers/database.js"
 import { end } from "../helpers/end.js"
+import { QuadraticClient } from "../helpers/quadraticClient.js"
 
 export default {
 	data: new ContextMenuCommandBuilder()
 		.setName("End Giveaway")
 		.setType(ApplicationCommandType.Message),
-	execute: async (interaction) => {
+	execute: async (interaction: MessageContextMenuCommandInteraction) => {
 		const giveaway = await db.Giveaways.findOne({
 			where: {
 				messageId: interaction.targetId
@@ -31,7 +36,7 @@ export default {
 				ephemeral: true
 			})
 
-		end(giveaway, interaction.client, true)
+		end(giveaway, interaction.client as QuadraticClient, true)
 
 		await interaction.reply({
 			content: "Giveaway Ended.",

@@ -2,7 +2,10 @@ import {
 	SlashCommandBuilder,
 	PermissionsBitField,
 	ChannelType,
-	inlineCode
+	inlineCode,
+	CommandInteraction,
+	MessageComponentInteraction,
+	ChatInputCommandInteraction
 } from "discord.js"
 import { db } from "../../helpers/database.js"
 
@@ -29,7 +32,12 @@ export default {
 				.setDescription("DM users when the win a giveaway.")
 				.setRequired(true)
 		),
-	execute: async (interaction) => {
+	execute: async (interaction: ChatInputCommandInteraction) => {
+		if (!interaction.inCachedGuild())
+			return await interaction.reply({
+				content:
+					"An error occurred. Are you attempting to use this command in a DM?"
+			})
 		if (
 			!interaction.member.permissions.has(
 				PermissionsBitField.Flags.ManageGuild
@@ -42,7 +50,9 @@ export default {
 				ephemeral: true
 			})
 
-		const [channelOption, extraOption, dmUsers] = interaction.options.data
+		const channelOption = interaction.options.getChannel("channel")
+		const extraOption = interaction.options.getString("extra_test")
+		const dmUsers = interaction.options.getBoolean("dm_users")
 
 		const [guildPrefs] = await db.GuildPrefs.findOrCreate({
 			where: { guildId: interaction.guildId },
@@ -52,7 +62,7 @@ export default {
 		})
 
 		if (
-			!channelOption.channel
+			!channelOption
 				.permissionsFor(interaction.guild.members.me)
 				.has([
 					PermissionsBitField.Flags.ViewChannel,
@@ -69,9 +79,9 @@ export default {
 		}
 
 		await guildPrefs.update({
-			giveawayChannelId: channelOption.channel.id,
-			extraGiveawayMessage: extraOption.value,
-			DMUsers: dmUsers.value
+			giveawayChannelId: channelOption.id,
+			extraGiveawayMessage: extraOption,
+			DMUsers: dmUsers
 		})
 
 		await interaction.reply({ content: `Changes saved!`, ephemeral: true })
