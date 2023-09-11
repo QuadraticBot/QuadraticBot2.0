@@ -38,7 +38,6 @@ export const end = async (
 
 			try {
 				const guild = await client.guilds.fetch(guildPrefs.guildId)
-
 				const channel = await guild.channels.fetch(
 					giveaway.channelId || guildPrefs.giveawayChannelId
 				)
@@ -165,7 +164,6 @@ export const end = async (
 					}
 
 				const enterButton = message.components[0].components[0]
-				console.log(enterButton)
 				if (!(enterButton instanceof ButtonComponent))
 					return console.log(
 						"Giveaway ended, enterButton not ButtonComponent"
