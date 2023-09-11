@@ -9,8 +9,8 @@ dependencies:
     specifier: ^14.13.0
     version: 14.13.0
   sequelize:
-    specifier: ^6.32.1
-    version: 6.32.1(sqlite3@5.1.6)
+    specifier: ^6.33.0
+    version: 6.33.0(sqlite3@5.1.6)
   sqlite3:
     specifier: ^5.1.6
     version: 5.1.6
@@ -1045,8 +1045,8 @@ packages:
     engines: {node: '>= 10.0.0'}
     dev: false
 
-  /sequelize@6.32.1(sqlite3@5.1.6):
-    resolution: {integrity: sha512-3Iv0jruv57Y0YvcxQW7BE56O7DC1BojcfIrqh6my+IQwde+9u/YnuYHzK+8kmZLhLvaziRT1eWu38nh9yVwn/g==}
+  /sequelize@6.33.0(sqlite3@5.1.6):
+    resolution: {integrity: sha512-GkeCbqgaIcpyZ1EyXrDNIwktbfMldHAGOVXHGM4x8bxGSRAOql5htDWofPvwpfL/FoZ59CaFmfO3Mosv1lDbQw==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       ibm_db: '*'
