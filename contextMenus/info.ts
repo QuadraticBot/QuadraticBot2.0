@@ -4,14 +4,16 @@ import {
 	ContextMenuCommandBuilder,
 	EmbedBuilder,
 	ApplicationCommandType,
-	roleMention
+	roleMention,
+	ContextMenuCommandInteraction,
+	MessageContextMenuCommandInteraction
 } from "discord.js"
 
 export default {
 	data: new ContextMenuCommandBuilder()
 		.setName("Giveaway Info")
 		.setType(ApplicationCommandType.Message),
-	execute: async (interaction) => {
+	execute: async (interaction: MessageContextMenuCommandInteraction) => {
 		const giveaway = await db.Giveaways.findOne({
 			where: {
 				messageId: interaction.targetId
@@ -39,9 +41,7 @@ export default {
 			.setTimestamp()
 			.setFooter({
 				text: interaction.client.user.tag,
-				iconURL: interaction.client.user.displayAvatarURL({
-					dynamic: true
-				})
+				iconURL: interaction.client.user.displayAvatarURL()
 			})
 			.addFields(
 				{

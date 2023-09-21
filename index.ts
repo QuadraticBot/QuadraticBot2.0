@@ -1,12 +1,8 @@
 import { readdir } from "fs/promises"
-import { Client, Collection, GatewayIntentBits } from "discord.js"
+import { QuadraticClient } from "./helpers/quadraticClient.js"
+import { GatewayIntentBits } from "discord.js"
 import config from "./config.json" assert { type: "json" }
-
-const client = new Client({ intents: [GatewayIntentBits.Guilds] })
-
-client.commands = new Collection()
-client.contextMenus = new Collection()
-client.buttons = new Collection()
+const client = new QuadraticClient({ intents: [GatewayIntentBits.Guilds] })
 
 const commandFolders = await readdir("./commands")
 for (const folder of commandFolders) {

@@ -2,7 +2,14 @@ import {
 	SlashCommandBuilder,
 	EmbedBuilder,
 	PermissionsBitField,
-	ChannelType
+	ChannelType,
+	Interaction,
+	CommandInteraction,
+	ChatInputCommandInteraction,
+	TextChannel,
+	VoiceChannel,
+	ForumChannel,
+	ThreadChannel
 } from "discord.js"
 
 export default {
@@ -12,11 +19,17 @@ export default {
 		.addChannelOption((option) =>
 			option
 				.setName("channel")
-				.setDescription("please mention the channel you want to nuke")
+				.setDescription("What channel do you want to nuke?")
 				.setRequired(false)
 				.addChannelTypes(ChannelType.GuildText)
 		),
-	async execute(interaction) {
+	async execute(interaction: ChatInputCommandInteraction) {
+		if (!interaction.inCachedGuild())
+			return await interaction.reply({
+				content:
+					"An error occurred. Are you attempting to use this command in a DM?"
+			})
+
 		if (
 			!interaction.member.permissions.has(
 				PermissionsBitField.Flags.ManageChannels
@@ -27,7 +40,7 @@ export default {
 				.setDescription(
 					"You're lacking the permission to run that command"
 				)
-				.setColor("5865f2")
+				.setColor("#5865f2")
 			return await interaction.reply({
 				embeds: [embed1],
 				ephemeral: true
@@ -35,25 +48,31 @@ export default {
 		}
 		let channel =
 			interaction.options.getChannel("channel") || interaction.channel
+		if (!("position" in channel))
+			return await interaction.reply({
+				content: "This channel type can not be nuked.",
+				ephemeral: true
+			})
 		let position = channel.position
 
 		try {
-			const msg = await channel.clone()
+			const newChannel = await channel.clone()
 			await channel.delete()
 			interaction.guild.channels.setPositions([
-				{ channel: msg, position: position + 1 }
+				{ channel: newChannel, position: position + 1 }
 			])
 
-			await msg.send({
-				embeds: [
-					new EmbedBuilder()
-						.setTitle("Successfully nuke this channel")
-						.setDescription(
-							`This Channel has been nuked by <@${interaction.user.id}> (╯°□°)╯︵ ┻━┻`
-						)
-						.setColor("5865f2")
-				]
-			})
+			if ("send" in newChannel)
+				await newChannel.send({
+					embeds: [
+						new EmbedBuilder()
+							.setTitle("Successfully nuked this channel")
+							.setDescription(
+								`This Channel has been nuked by <@${interaction.user.id}> (╯°□°)╯︵ ┻━┻`
+							)
+							.setColor("#5865f2")
+					]
+				})
 			return await interaction.reply({
 				embeds: [
 					new EmbedBuilder()
@@ -61,7 +80,7 @@ export default {
 						.setDescription(
 							`Channel nuked successfully. (╯°□°)╯︵ ┻━┻`
 						)
-						.setColor("5865f2")
+						.setColor("#5865f2")
 				],
 				ephemeral: true
 			})
@@ -74,7 +93,7 @@ export default {
 						.setDescription(
 							`There was an error while nuking the channel.`
 						)
-						.setColor("5865f2")
+						.setColor("#5865f2")
 				],
 				ephemeral: true
 			})

@@ -1,5 +1,10 @@
-export const commandInteraction = async (interaction) => {
-	const command = interaction.client.commands.get(interaction.commandName)
+import { CommandInteraction } from "discord.js"
+import { QuadraticClient } from "./quadraticClient.js"
+
+export const commandInteraction = async (interaction: CommandInteraction) => {
+	const command = (interaction.client as QuadraticClient).commands.get(
+		interaction.commandName
+	)
 	if (!command) return
 
 	try {

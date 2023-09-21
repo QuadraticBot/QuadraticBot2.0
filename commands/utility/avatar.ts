@@ -3,7 +3,9 @@ import {
 	EmbedBuilder,
 	ActionRowBuilder,
 	ButtonBuilder,
-	ButtonStyle
+	ButtonStyle,
+	CommandInteraction,
+	ChatInputCommandInteraction
 } from "discord.js"
 
 export default {
@@ -13,7 +15,7 @@ export default {
 		.addUserOption((option) =>
 			option.setName("user").setDescription("Please mention the user")
 		),
-	execute: async (interaction) => {
+	execute: async (interaction: ChatInputCommandInteraction) => {
 		const user = interaction.options.getUser("user") ?? interaction.user
 		const animated = user.avatar.startsWith("a_")
 
@@ -21,7 +23,7 @@ export default {
 			.setColor("#14bbaa")
 			.setDescription(`${user}'s avatar:`)
 			.setImage(user.displayAvatarURL())
-		const row = new ActionRowBuilder().addComponents([
+		const row = new ActionRowBuilder<ButtonBuilder>().addComponents([
 			new ButtonBuilder()
 				.setURL(user.displayAvatarURL())
 				.setLabel(animated ? "GIF" : "WEBP")

@@ -1,7 +1,9 @@
 import {
 	ContextMenuCommandBuilder,
 	ApplicationCommandType,
-	PermissionsBitField
+	PermissionsBitField,
+	ContextMenuCommandInteraction,
+	MessageContextMenuCommandInteraction
 } from "discord.js"
 import { db } from "../helpers/database.js"
 
@@ -9,7 +11,13 @@ export default {
 	data: new ContextMenuCommandBuilder()
 		.setName("Cancel Giveaway")
 		.setType(ApplicationCommandType.Message),
-	execute: async (interaction) => {
+	execute: async (interaction: MessageContextMenuCommandInteraction) => {
+		if (!interaction.inCachedGuild())
+			return await interaction.reply({
+				content:
+					"An error occurred. Are you attempting to use this command in a DM?"
+			})
+
 		const giveaway = await db.Giveaways.findOne({
 			where: {
 				messageId: interaction.targetId

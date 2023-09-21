@@ -1,5 +1,12 @@
-export const contextMenuInteraction = async (interaction) => {
-	const command = interaction.client.contextMenus.get(interaction.commandName)
+import { ContextMenuCommandInteraction } from "discord.js"
+import { QuadraticClient } from "./quadraticClient.js"
+
+export const contextMenuInteraction = async (
+	interaction: ContextMenuCommandInteraction
+) => {
+	const command = (interaction.client as QuadraticClient).contextMenus.get(
+		interaction.commandName
+	)
 	if (!command) return
 
 	try {
