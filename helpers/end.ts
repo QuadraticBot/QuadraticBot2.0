@@ -16,12 +16,11 @@ export const end = async (
 	instant: boolean = false,
 	rerollWinners?: number
 ) => {
-	const time = instant ? 0 : giveaway.endDate - Date.now()
+	let time = giveaway.endDate - Date.now()
+	time = instant || time < 0 ? 0 : time
 
 	console.info(
-		`Ender executed for giveaway ${giveaway.uuid}. Ending in ${
-			time > 0 ? time : 0
-		}.`
+		`Ender executed for giveaway ${giveaway.uuid}. Ending in ${time}.`
 	)
 
 	smartTimeout(
