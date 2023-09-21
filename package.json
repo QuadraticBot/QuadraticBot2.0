@@ -14,7 +14,7 @@
 		"discord.js": "^14.13.0",
 		"sequelize": "^6.33.0",
 		"sqlite3": "^5.1.6",
-		"uuid": "^9.0.0"
+		"uuid": "^9.0.1"
 	},
 	"devDependencies": {
 		"nodemon": "^3.0.1"
