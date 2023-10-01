@@ -1,6 +1,11 @@
-import { ActionRowBuilder } from "discord.js"
-import { ButtonBuilder } from "discord.js"
-import { EmbedBuilder, bold, userMention } from "discord.js"
+import {
+	EmbedBuilder,
+	bold,
+	userMention,
+	ButtonBuilder,
+	ActionRowBuilder,
+	hyperlink
+} from "discord.js"
 import { db } from "./database.js"
 import { msTimestamp, randomIndex, smartTimeout } from "./utilities.js"
 
