@@ -12,7 +12,7 @@
 	"license": "GNU GENERAL PUBLIC LICENSE",
 	"dependencies": {
 		"discord.js": "^14.13.0",
-		"sequelize": "^6.33.0",
+		"sequelize": "^6.35.1",
 		"sqlite3": "^5.1.6",
 		"uuid": "^9.0.1"
 	},
