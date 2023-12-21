@@ -1,11 +1,13 @@
 import {
-    ActionRowBuilder,
-    ButtonComponent,
-    TextChannel,
+    bold,
     hyperlink,
+    userMention,
+    TextChannel,
+    EmbedBuilder,
+    ButtonBuilder,
+    ButtonComponent,
+    ActionRowBuilder,
 } from "discord.js"
-import { ButtonBuilder } from "discord.js"
-import { EmbedBuilder, bold, userMention } from "discord.js"
 import { Giveaway, db } from "./database.js"
 import { msTimestamp, randomIndex, smartTimeout } from "./utilities.js"
 import { QuadraticClient } from "./quadraticClient.js"
@@ -26,8 +28,11 @@ export const end = async (
     smartTimeout(
         async () => {
             await giveaway.reload()
+
             if (giveaway.isFinished && !rerollWinners)
-                return console.info("Giveaway already ended")
+                return console.warn(
+                    "Giveaway already ended, but ender still executed"
+                )
 
             const guildPrefs = await db.GuildPrefs.findOne({
                 where: {

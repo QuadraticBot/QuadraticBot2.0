@@ -1,5 +1,9 @@
 # Changelog
 
+## 21/12/2023
+
+-   Typescript rewrite
+
 ## 28/06/2023
 
 -   Added `/avatar` command, credit to HelvetiDeveloper for original code.
