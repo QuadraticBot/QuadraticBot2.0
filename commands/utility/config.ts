@@ -3,8 +3,6 @@ import {
 	PermissionsBitField,
 	ChannelType,
 	inlineCode,
-	CommandInteraction,
-	MessageComponentInteraction,
 	ChatInputCommandInteraction
 } from "discord.js"
 import { db } from "../../helpers/database.js"

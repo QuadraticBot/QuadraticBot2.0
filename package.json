@@ -18,6 +18,8 @@
 	},
 	"devDependencies": {
 		"@types/uuid": "^9.0.3",
+		"@typescript-eslint/eslint-plugin": "^6.15.0",
+		"no-unused-vars:": "link:@typescript-eslint/no-unused-vars:",
 		"nodemon": "^3.0.1",
 		"ts-node": "^10.9.1"
 	}

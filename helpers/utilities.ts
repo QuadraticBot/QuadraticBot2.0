@@ -5,7 +5,7 @@ import {
 	time as timestamp
 } from "discord.js"
 
-export const smartTimeout = (callback: Function, time: number) => {
+export const smartTimeout = (callback: VoidFunction, time: number) => {
 	const MAX_TIME = 2147483647
 	let smartTime = 0
 	if (time > MAX_TIME) smartTime = MAX_TIME
@@ -32,7 +32,7 @@ export const addModal = async (
 	})
 }
 
-export const randomIndex = (array: Array<any>) =>
+export const randomIndex = (array: Array<unknown>) =>
 	Math.floor(Math.random() * array.length)
 
-export const random = (array: Array<any>) => array[randomIndex(array)]
+export const random = (array: Array<unknown>) => array[randomIndex(array)]

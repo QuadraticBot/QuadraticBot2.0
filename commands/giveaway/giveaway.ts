@@ -11,10 +11,6 @@ import {
 	PermissionsBitField,
 	TextInputStyle,
 	ButtonStyle,
-	CommandInteraction,
-	ActionRow,
-	TextInputComponent,
-	Channel,
 	TextChannel,
 	ChatInputCommandInteraction
 } from "discord.js"
