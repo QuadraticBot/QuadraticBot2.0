@@ -93,8 +93,8 @@ export const end = async (
                     .setTimestamp()
                     .setTitle(
                         `Giveaway Complete! ${
-                            entrants.length == 0 ? "Nobody joined..." : ""
-                        }`
+                            instant ? "Ended early by admin/host." : ""
+                        } ${entrants.length == 0 ? "Nobody joined..." : ""}`
                     )
                     .setFields(
                         winnerNames
@@ -167,7 +167,7 @@ export const end = async (
 
                 const replyEmbed = new EmbedBuilder()
                     .setColor(Colors.Aqua)
-                    .setTitle("Giveaway Ended!")
+                    .setTitle(`Giveaway ended${instant ? " early" : ""}!`)
                     .setDescription(`Giveaway for ${bold(giveaway.item)}!`)
                     .setFields(
                         winnerNames
