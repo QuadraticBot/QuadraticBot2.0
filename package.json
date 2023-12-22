@@ -5,7 +5,8 @@
     "main": "index.ts",
     "scripts": {
         "deploy": "ts-node deployCommands.ts",
-        "dev": "nodemon --exec 'node --loader ts-node/esm'"
+        "dev": "pnpm lint && nodemon --exec 'node --loader ts-node/esm' index.ts",
+        "lint": "eslint ."
     },
     "type": "module",
     "author": "Henry Hiles",
@@ -19,6 +20,7 @@
     "devDependencies": {
         "@types/uuid": "^9.0.7",
         "@typescript-eslint/eslint-plugin": "^6.15.0",
+        "eslint": "^8.56.0",
         "no-unused-vars:": "link:@typescript-eslint/no-unused-vars:",
         "nodemon": "^3.0.2",
         "ts-node": "^10.9.2"

@@ -97,10 +97,17 @@ export const end = async (
                         }`
                     )
                     .setFields(
-                        winners && {
-                            name: "Won by:",
-                            value: bold(winnerNames),
-                        },
+                        winnerNames
+                            ? {
+                                  name: "Won by:",
+                                  value: bold(winnerNames),
+                                  inline: true,
+                              }
+                            : {
+                                  name: "Nobody joined",
+                                  value: "No winners",
+                                  inline: true,
+                              },
                         rerollWinners
                             ? message.embeds[0].fields.find(
                                   (field) =>
@@ -115,6 +122,7 @@ export const end = async (
                                             "R"
                                         )})`
                                       : msTimestamp(giveaway.endDate, "R"),
+                                  inline: true,
                               },
                         message.embeds[0].fields.find(
                             (field) => field.name == "Requirements"
@@ -181,7 +189,7 @@ export const end = async (
                 await message.reply({
                     content: `${rerollWinners ? "Rerolled. " : ""}${
                         winnerNames
-                            ? "Won by ${winnerNames}!"
+                            ? `Won by ${winnerNames}!`
                             : "Nobody joined."
                     } Hosted by: ${userMention(giveaway.userId)}.${
                         extraSlots > 0 && winnerNames
