@@ -1,12 +1,13 @@
 {
-	"compilerOptions": {
-		"outDir": "./dist",
-		"module": "NodeNext",
-		"target": "ESNext",
-		"moduleResolution": "NodeNext",
-		"resolveJsonModule": true
-	},
-	"ts-node": {
-		"esm": true
-	}
+    "compilerOptions": {
+        "outDir": "./dist",
+        "module": "NodeNext",
+        "target": "ESNext",
+        "moduleResolution": "NodeNext",
+        "esModuleInterop": true,
+        "resolveJsonModule": true
+    },
+    "ts-node": {
+        "esm": true
+    }
 }

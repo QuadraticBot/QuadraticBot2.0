@@ -1,26 +1,26 @@
 {
-	"name": "quadraticbot2.0",
-	"version": "1.0.0",
-	"description": "A simple, open-source, user-friendly Discord giveaway bot that uses the latest features, such as slash commands, timestamps, context menus, and buttons.",
-	"main": "index.ts",
-	"scripts": {
-		"deploy": "node deployCommands.js",
-		"dev": "nodemon"
-	},
-	"type": "module",
-	"author": "Henry Hiles",
-	"license": "GNU GENERAL PUBLIC LICENSE",
-	"dependencies": {
-		"discord.js": "^14.13.0",
-		"sequelize": "^6.32.1",
-		"sqlite3": "^5.1.6",
-		"uuid": "^9.0.0"
-	},
-	"devDependencies": {
-		"@types/uuid": "^9.0.3",
-		"@typescript-eslint/eslint-plugin": "^6.15.0",
-		"no-unused-vars:": "link:@typescript-eslint/no-unused-vars:",
-		"nodemon": "^3.0.1",
-		"ts-node": "^10.9.1"
-	}
+    "name": "quadraticbot2.0",
+    "version": "1.0.0",
+    "description": "A simple, open-source, user-friendly Discord giveaway bot that uses the latest features, such as slash commands, timestamps, context menus, and buttons.",
+    "main": "index.ts",
+    "scripts": {
+        "deploy": "ts-node deployCommands.ts",
+        "dev": "nodemon --exec 'node --loader ts-node/esm'"
+    },
+    "type": "module",
+    "author": "Henry Hiles",
+    "license": "GNU GENERAL PUBLIC LICENSE",
+    "dependencies": {
+        "discord.js": "^14.14.1",
+        "sequelize": "^6.35.2",
+        "sqlite3": "^5.1.6",
+        "uuid": "^9.0.1"
+    },
+    "devDependencies": {
+        "@types/uuid": "^9.0.7",
+        "@typescript-eslint/eslint-plugin": "^6.15.0",
+        "no-unused-vars:": "link:@typescript-eslint/no-unused-vars:",
+        "nodemon": "^3.0.2",
+        "ts-node": "^10.9.2"
+    }
 }

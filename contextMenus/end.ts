@@ -5,7 +5,7 @@ import {
 } from "discord.js"
 import { db } from "../helpers/database.js"
 import { end } from "../helpers/end.js"
-import { QuadraticClient } from "../helpers/quadraticClient.js"
+import { QuadraticClient } from "../models/quadraticClient.js"
 
 export default {
     data: new ContextMenuCommandBuilder()

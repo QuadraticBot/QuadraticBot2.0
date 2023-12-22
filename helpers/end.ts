@@ -5,12 +5,14 @@ import {
     TextChannel,
     EmbedBuilder,
     ButtonBuilder,
-    ButtonComponent,
     ActionRowBuilder,
+    Colors,
 } from "discord.js"
 import { Giveaway, db } from "./database.js"
 import { msTimestamp, randomIndex, smartTimeout } from "./utilities.js"
-import { QuadraticClient } from "./quadraticClient.js"
+import { QuadraticClient } from "../models/quadraticClient.js"
+import enterButton from "../components/enterButton.js"
+import { Winner } from "../models/winner.js"
 
 export const end = async (
     giveaway: Giveaway,
@@ -45,8 +47,9 @@ export const end = async (
                 const channel = await guild.channels.fetch(
                     giveaway.channelId || guildPrefs.giveawayChannelId
                 )
+
                 if (!(channel instanceof TextChannel))
-                    return console.log(
+                    return console.warn(
                         "Giveaway ended, but channel not TextChannel"
                     )
 
@@ -58,65 +61,45 @@ export const end = async (
                     },
                 })
 
-                if (entrants.length == 0) {
-                    const embed = EmbedBuilder.from(message.embeds[0]).setTitle(
-                        "Giveaway Complete! Nobody joined..."
-                    )
+                const winners: Winner[] = []
 
-                    if (!rerollWinners)
-                        embed.setFields(
-                            {
-                                name: "Ended",
-                                value: instant
-                                    ? `Early (${msTimestamp(Date.now(), "R")})`
-                                    : msTimestamp(giveaway.endDate, "R"),
-                            },
-                            {
-                                name: "Requirements",
-                                value: (
-                                    message.embeds[0].fields[2] ??
-                                    message.embeds[0].fields[1]
-                                ).value,
-                            }
+                if (entrants.length != 0) {
+                    const entrantsList = [...entrants]
+
+                    for (
+                        let i = 0;
+                        i <
+                        ((rerollWinners || giveaway.winners) > entrants.length
+                            ? entrants.length
+                            : rerollWinners || giveaway.winners);
+                        i++
+                    ) {
+                        const winnerIndex = randomIndex(entrantsList)
+
+                        winners[i] = new Winner(
+                            entrantsList[winnerIndex].userId,
+                            userMention(entrantsList[winnerIndex].userId)
                         )
 
-                    const enterButton = message.components[0].components[0]
-
-                    if (!(enterButton instanceof ButtonComponent))
-                        return console.log(
-                            "Giveaway ended, but enterButton not ButtonComponent"
-                        )
+                        entrantsList.splice(winnerIndex, 1)
+                    }
                 }
 
-                const winnerNames = []
-                const winners = []
+                const winnerNames = winners
+                    .map((winner) => winner.mention)
+                    .join(", ")
 
-                const entrantsList = [...entrants]
-
-                for (
-                    let i = 0;
-                    i <
-                    ((rerollWinners || giveaway.winners) > entrants.length
-                        ? entrants.length
-                        : rerollWinners || giveaway.winners);
-                    i++
-                ) {
-                    const winnerIndex = randomIndex(entrantsList)
-
-                    winnerNames[i] = userMention(
-                        entrantsList[winnerIndex].userId
+                const giveawayEmbed = EmbedBuilder.from(message.embeds[0])
+                    .setTimestamp()
+                    .setTitle(
+                        `Giveaway Complete! ${
+                            entrants.length == 0 ? "Nobody joined..." : ""
+                        }`
                     )
-                    winners[i] = entrantsList[winnerIndex].userId
-
-                    entrantsList.splice(winnerIndex, 1)
-                }
-
-                const embed = EmbedBuilder.from(message.embeds[0])
-                    .setTitle("Giveaway Complete!")
                     .setFields(
-                        {
+                        winners && {
                             name: "Won by:",
-                            value: bold(winnerNames.join(", ")),
+                            value: bold(winnerNames),
                         },
                         rerollWinners
                             ? message.embeds[0].fields.find(
@@ -143,9 +126,9 @@ export const end = async (
 
                 if (guildPrefs.DMUsers)
                     for (const winner of winners) {
-                        const member = await guild.members.fetch(winner)
+                        const member = await guild.members.fetch(winner.id)
 
-                        const embed = new EmbedBuilder()
+                        const dmEmbed = new EmbedBuilder()
                             .setTitle(
                                 `You just won the giveaway for ${bold(
                                     giveaway.item
@@ -158,88 +141,80 @@ export const end = async (
                         try {
                             await member.send({
                                 content: null,
-                                embeds: [embed],
+                                embeds: [dmEmbed],
                             })
                         } catch (error) {
-                            if (error.code === 50007)
-                                console.info("User has DMs turned off.")
-                            else throw error
+                            if (error.code !== 50007) throw error // If user has DMs off, ignore
                         }
                     }
-
-                const enterButton = message.components[0].components[0]
-                if (!(enterButton instanceof ButtonComponent))
-                    return console.log(
-                        "Giveaway ended, enterButton not ButtonComponent"
-                    )
 
                 const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
                     ButtonBuilder.from(enterButton).setDisabled(true)
                 )
 
                 await message.edit({
-                    embeds: [embed],
+                    embeds: [giveawayEmbed],
                     components: [row],
                 })
 
-                const embed2 = new EmbedBuilder()
-                    .setColor("#14bbaa")
+                const replyEmbed = new EmbedBuilder()
+                    .setColor(Colors.Aqua)
                     .setTitle("Giveaway Ended!")
                     .setDescription(`Giveaway for ${bold(giveaway.item)}!`)
-                    .addFields({
-                        name: "Won by:",
-                        value: winnerNames.join(", "),
-                    })
+                    .setFields(
+                        winnerNames
+                            ? {
+                                  name: "Won by:",
+                                  value: winnerNames,
+                              }
+                            : { name: "Nobody joined", value: "No winners" }
+                    )
                     .setTimestamp()
                     .setFooter({
                         text: message.client.user.tag,
                         iconURL: message.client.user.displayAvatarURL(),
                     })
+
+                const extraSlots =
+                    (rerollWinners || giveaway.winners) - entrants.length
+
                 await message.reply({
-                    content: `${
-                        rerollWinners ? "Rerolled. " : ""
-                    }Won by ${winnerNames.join(", ")}! Hosted by: ${userMention(
-                        giveaway.userId
-                    )}.\n ${
-                        (rerollWinners || giveaway.winners) > entrants.length
-                            ? `The last ${
-                                  (rerollWinners || giveaway.winners) -
-                                      entrants.length ==
-                                  1
-                                      ? "winner slot was"
-                                      : `${
-                                            (rerollWinners ||
-                                                giveaway.winners) -
-                                            entrants.length
-                                        } winner slots were`
+                    content: `${rerollWinners ? "Rerolled. " : ""}${
+                        winnerNames
+                            ? "Won by ${winnerNames}!"
+                            : "Nobody joined."
+                    } Hosted by: ${userMention(giveaway.userId)}.${
+                        extraSlots > 0 && winnerNames
+                            ? ` The last ${
+                                  extraSlots > 1
+                                      ? `${extraSlots} winner slots were`
+                                      : "winner slot was"
                               } not chosen as there were not enough entrants.`
                             : ""
                     }`,
-                    embeds: [embed2],
+                    embeds: [replyEmbed],
                 })
                 await giveaway.update({ isFinished: true })
                 console.info(
-                    `Giveaway ${giveaway.uuid} ended with ${entrants.length} entrants.`
+                    `Giveaway ${giveaway.uuid} has ended with ${entrants.length} entrants.`
                 )
             } catch (error) {
                 if (error.code == 10008) {
                     console.info("Message deleted, removing giveaway")
-                    return await giveaway.update({
+                    await giveaway.update({
                         isFinished: true,
                     })
                 } else if (error.code == 10003) {
                     console.info("Channel deleted, removing giveaway")
-                    return await giveaway.update({
+                    await giveaway.update({
                         isFinished: true,
                     })
                 } else if (error.code == 50001) {
-                    console.info("Bot no longer in guild, removing giveaway")
-                    return await giveaway.update({
+                    console.info("Bot is no longer in guild, removing giveaway")
+                    await giveaway.update({
                         isFinished: true,
                     })
-                }
-
-                throw error
+                } else throw error
             }
         },
         time > 0 ? time : 0
