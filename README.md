@@ -1,5 +1,8 @@
 # QuadraticBot 2.0
 
+## Archived
+### This project has been archived since I moved away from discord and started using matrix. If you are interested in maintaining, fork the typescript rewrite branch.
+
 A simple, open-source, user-friendly Discord giveaway bot that uses the latest features, such as slash commands, timestamps, and buttons.
 
 It's a rewrite of my original closed-source Discord bot, Quadratic Giveaways.
